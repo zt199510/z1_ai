@@ -18,7 +18,8 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   HeartOutlined,
-  MessageOutlined
+  MessageOutlined,
+  MedicineBoxOutlined
 } from '@ant-design/icons';
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
@@ -58,7 +59,16 @@ export default function SidebarLayout() {
   const menuItems = [
     {
       key: 'medical-chat',
-      icon: <MessageOutlined />,
+      icon: <span style={{ position: 'relative', display: 'inline-block' }}>
+        <MedicineBoxOutlined style={{ color: medicalColors.primary,top:'-10px' }} />
+        <HeartOutlined style={{ 
+          position: 'absolute', 
+          fontSize: '5px', 
+          top: '0px', 
+          right: '0px', 
+          color: '#F06292' 
+        }} />
+      </span>,
       label: '医疗咨询 Medical',
       onClick: () => navigate('/medical-chat'),
     },
@@ -86,6 +96,7 @@ export default function SidebarLayout() {
       {/* 侧边栏 */}
       <Sider
         width={240}
+        collapsedWidth={60}
         collapsible
         collapsed={collapsed}
         trigger={null}
@@ -105,7 +116,12 @@ export default function SidebarLayout() {
       >
         <Flexbox padding={8} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* 添加顶部的缩放按钮 */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: collapsed ? 'flex-end' : 'space-between', 
+            alignItems: 'center', 
+            marginBottom: 16 
+          }}>
             {!collapsed && <Text strong style={{ color: medicalColors.primary }}>Z1 AI <HeartOutlined style={{ color: '#F06292' }} /></Text>}
             <Button 
               type="text"
@@ -214,7 +230,7 @@ export default function SidebarLayout() {
       </Sider>
       
       {/* 主内容区 */}
-      <Layout style={{ marginLeft: collapsed ? 80 : 240, transition: 'all 0.2s' }}>
+      <Layout style={{ marginLeft: collapsed ? 60 : 240, transition: 'all 0.2s' }}>
         <Content style={{ 
           padding: '24px', 
           background: token.colorBgContainer,
