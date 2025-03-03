@@ -1,4 +1,9 @@
 ---
+description: 默认
+globs: 
+alwaysApply: false
+---
+---
 description: 全局规则，应该应用到所有的文本
 globs: *.css,*.tsx
 alwaysApply: false

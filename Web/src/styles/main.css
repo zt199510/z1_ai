@@ -40,4 +40,96 @@
 
 .shadow-custom {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* 医疗风格按钮样式 */
+.medical-chat-button {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 40px !important;
+}
+
+.medical-chat-button:hover {
+  background-color: #D1E9FC !important;
+  border-color: #1976D2 !important;
+  color: #1976D2 !important;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15) !important;
+  height: 40px !important;
+}
+
+.medical-chat-button:active {
+  background-color: #BBDEFB !important;
+  transform: translateY(1px);
+  height: 40px !important;
+}
+
+/* 用户卡片样式 */
+.user-profile-card {
+  transition: all 0.3s ease;
+}
+
+.user-profile-card:hover {
+  background-color: rgba(25, 118, 210, 0.05) !important;
+  border-color: rgba(25, 118, 210, 0.1) !important;
+}
+
+/* Vercel AI 聊天界面样式 */
+.vercel-ai-chat {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.vercel-ai-chat-message {
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+}
+
+.vercel-ai-chat-message-content {
+  border-radius: 8px;
+  padding: 12px 16px;
+  line-height: 1.6;
+}
+
+.vercel-ai-chat-message-user .vercel-ai-chat-message-content {
+  background-color: #f0f0f0;
+}
+
+.vercel-ai-chat-message-assistant .vercel-ai-chat-message-content {
+  background-color: #E3F2FD;
+}
+
+.vercel-ai-chat-input {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.vercel-ai-chat-input:focus {
+  border-color: #1976D2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.vercel-ai-chat-send-button {
+  border-radius: 8px;
+  background-color: #1976D2;
+  border-color: #1976D2;
+  transition: all 0.3s ease;
+}
+
+.vercel-ai-chat-send-button:hover {
+  background-color: #1565C0;
+  border-color: #1565C0;
+}
+
+/* 医疗主题样式 */
+.medical-theme {
+  --medical-primary: #1976D2;
+  --medical-secondary: #E3F2FD;
+  --medical-accent: #03A9F4;
+  --medical-success: #4CAF50;
+  --medical-border: #BBDEFB;
+  --medical-text: #333333;
+  --medical-light-text: #757575;
 } 

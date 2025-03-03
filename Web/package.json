@@ -13,6 +13,7 @@
     "@ant-design/x": "^1.0.5",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^1.0.6",
+    "@types/uuid": "^10.0.0",
     "ai": "^4.1.41",
     "antd": "^5.24.2",
     "antd-style": "^3.7.1",
@@ -22,6 +23,7 @@
     "react-layout-kit": "^1.9.1",
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.2.0",
+    "uuid": "^11.1.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

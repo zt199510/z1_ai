@@ -7,9 +7,7 @@ import {
   Button, 
   Divider, 
   Space,
-  theme,
-  Card,
-  Avatar
+  theme
 } from "antd";
 import { 
   TeamOutlined, 
@@ -17,17 +15,28 @@ import {
   ProjectOutlined, 
   CommentOutlined,
   PlusOutlined,
-  RightOutlined,
   MenuUnfoldOutlined,
-  MenuFoldOutlined
+  MenuFoldOutlined,
+  HeartOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import { useState } from "react";
-import UserProfileDrawer from "../components/ui/UserProfileDrawer";
 import useAuth from "../hooks/useAuth";
+import "../styles/main.css"; // 导入样式文件
+import UserProfileCard from "../components/ui/Cards/UserProfileCard";
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
 const { useToken } = theme;
+
+// 医疗主题颜色
+const medicalColors = {
+  primary: '#1976D2', // 医疗蓝
+  secondary: '#E3F2FD', // 浅蓝色背景
+  accent: '#03A9F4', // 强调色
+  success: '#4CAF50', // 成功绿色
+  border: '#BBDEFB', // 边框颜色
+};
 
 // 最近的聊天记录
 const recentChats = [
@@ -41,7 +50,6 @@ export default function SidebarLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { token } = useToken();
   const { isLoggedIn, user, logout } = useAuth();
-  const [showUserProfile, setShowUserProfile] = useState(false);
 
   // 获取当前路径
   const currentPath = location.pathname;
@@ -49,28 +57,10 @@ export default function SidebarLayout() {
   // 侧边栏菜单项
   const menuItems = [
     {
-      key: 'community',
-      icon: <TeamOutlined />,
-      label: 'Community 社区',
-      onClick: () => navigate('/community'),
-    },
-    {
-      key: 'library',
-      icon: <BookOutlined />,
-      label: 'Library 图书馆',
-      onClick: () => navigate('/library'),
-    },
-    {
-      key: 'projects',
-      icon: <ProjectOutlined />,
-      label: 'Projects 项目',
-      onClick: () => navigate('/projects'),
-    },
-    {
-      key: 'feedback',
-      icon: <CommentOutlined />,
-      label: 'Feedback 反馈',
-      onClick: () => navigate('/feedback'),
+      key: 'medical-chat',
+      icon: <MessageOutlined />,
+      label: '医疗咨询 Medical',
+      onClick: () => navigate('/medical-chat'),
     },
   ];
 
@@ -102,7 +92,7 @@ export default function SidebarLayout() {
         onCollapse={(value) => setCollapsed(value)}
         style={{
           background: token.colorBgContainer,
-          borderRight: `1px solid ${token.colorBorderSecondary}`,
+          borderRight: `1px solid ${medicalColors.border}`,
           overflow: 'auto',
           height: '100vh',
           position: 'fixed',
@@ -111,39 +101,66 @@ export default function SidebarLayout() {
           bottom: 0,
           zIndex: 1000,
         }}
+        className="medical-theme"
       >
-        <Flexbox padding={16} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Flexbox padding={8} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* 添加顶部的缩放按钮 */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            {!collapsed && <Text strong>Z1 AI</Text>}
+            {!collapsed && <Text strong style={{ color: medicalColors.primary }}>Z1 AI <HeartOutlined style={{ color: '#F06292' }} /></Text>}
             <Button 
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setCollapsed(!collapsed)}
-              style={{ fontSize: '16px', width: 64 }}
+              style={{ 
+                fontSize: '16px', 
+                width: '40px', 
+                height: '40px', 
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: medicalColors.primary,
+                borderRadius: '8px',
+              }}
             />
           </div>
           
           <Button 
             type="primary" 
             icon={<PlusOutlined />} 
-            style={{ width: '100%', marginBottom: 16 }}
+            style={{ 
+              width: '100%', 
+              marginBottom: 16, 
+              backgroundColor: medicalColors.primary,
+              borderColor: medicalColors.primary,
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(25, 118, 210, 0.2)',
+              height: '40px'
+            }}
             onClick={() => navigate('/')}
+            className="medical-chat-button"
           >
-            {!collapsed && 'New Chat 新聊天'}
+            {!collapsed && (
+              <>
+                <HeartOutlined style={{ marginRight: 4 }} /> New Chat 新聊天
+              </>
+            )}
           </Button>
           
           <Menu
             mode="inline"
             selectedKeys={[currentPath.split('/')[1] || 'home']}
-            style={{ border: 'none' }}
+            style={{ 
+              border: 'none',
+              backgroundColor: 'transparent'
+            }}
             items={menuItems}
           />
           
           {!collapsed && (
             <>
-              <Divider style={{ margin: '12px 0' }} />
-              <div style={{ padding: '0 8px' }}>
+              <Divider style={{ margin: '12px 0', borderColor: medicalColors.border }} />
+              <div style={{ padding: '0 0px' }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>Recent Chats 最近聊天</Text>
                 <Space direction="vertical" style={{ width: '100%', marginTop: 8 }}>
                   {recentChats.map(chat => (
@@ -152,11 +169,23 @@ export default function SidebarLayout() {
                       type="text" 
                       style={{ 
                         textAlign: 'left', 
-                        height: 'auto',
-                        padding: '4px 8px',
-                        whiteSpace: 'normal',
-                        lineHeight: '1.5'
+                        height: '40px',
+                        padding: '0px 12px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        lineHeight: '32px',
+                        borderRadius: '8px',
+                        width: '100%',
+                        display: 'block',
+                        color: '#333',
+                        backgroundColor: medicalColors.secondary,
+                        border: `1px solid ${medicalColors.border}`,
+                        marginBottom: '0px',
+                        transition: 'all 0.3s ease'
                       }}
+                      className="medical-chat-button"
+                      title={chat.title}
                     >
                       {chat.title}
                     </Button>
@@ -167,48 +196,19 @@ export default function SidebarLayout() {
           )}
           
           {/* 在底部添加用户卡片 */}
-          <div style={{ marginTop: 'auto', paddingTop: 0 }}>
-            {!collapsed && (
-              <Card 
-                style={{ width: '100%', cursor: 'pointer' }}
-                bodyStyle={{ padding: '12px' }}
-                onClick={() => setShowUserProfile(true)}
-              >
-                <Space>
-                  <Avatar 
-                    size="small" 
-                    style={{ 
-                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                      color: '#fff'
-                    }}
-                  >
-                    {user?.username?.charAt(0).toUpperCase() || 'U'}
-                  </Avatar>
-                  <div style={{ maxWidth: collapsed ? '0' : '160px', overflow: 'hidden' }}>
-                    <Text ellipsis strong style={{ fontSize: '14px', display: 'block' }}>{user?.username || '用户'}</Text>
-                    <Text type="secondary" style={{ fontSize: '12px' }}>点击查看个人资料</Text>
-                  </div>
-                </Space>
-              </Card>
-            )}
-            {collapsed && (
-              <Button
-                type="text"
-                icon={
-                  <Avatar 
-                    size="small" 
-                    style={{ 
-                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                      color: '#fff'
-                    }}
-                  >
-                    {user?.username?.charAt(0).toUpperCase() || 'U'}
-                  </Avatar>
-                }
-                style={{ width: '100%', marginBottom: 0, padding: '8px 0' }}
-                onClick={() => setShowUserProfile(true)}
-              />
-            )}
+          <div style={{ marginTop: 'auto', paddingTop: 18 }}>
+            <UserProfileCard 
+              user={user ? {
+                email: user.email,
+                username: user.username,
+                avatar: user.avatar,
+                plan: user.plan as 'free' | 'pro' | 'team',
+                team: user.team
+              } : undefined}
+              collapsed={collapsed}
+              onLogout={handleLogout}
+              onSwitchTeam={handleSwitchTeam}
+            />
           </div>
         </Flexbox>
       </Sider>
@@ -223,18 +223,6 @@ export default function SidebarLayout() {
           <Outlet />
         </Content>
       </Layout>
-
-      {/* 用户信息栏和抽屉菜单 */}
-      <UserProfileDrawer 
-        isLoggedIn={isLoggedIn}
-        user={user || undefined}
-        onLogout={handleLogout}
-        onSwitchTeam={handleSwitchTeam}
-        onUpgradePlan={handleUpgradePlan}
-        position="top"
-        open={showUserProfile}
-        onClose={() => setShowUserProfile(false)}
-      />
     </Layout>
   );
 } 

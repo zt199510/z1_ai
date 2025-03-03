@@ -71,7 +71,7 @@ export default function ChatPage() {
   ];
 
   return (
-    <Layout style={{ background: '#fff', height: '100vh' }}>
+    <Layout style={{ background: '#fff', height: '95vh' }}>
       <Content style={{ padding: '40px 20px', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <Title level={1} style={{ fontSize: 48, marginBottom: 16 }}>
