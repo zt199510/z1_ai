@@ -77,7 +77,9 @@ export default function ChatPage() {
           <Title level={1} style={{ fontSize: 48, marginBottom: 16 }}>
             What can I help you ship?
           </Title>
-        
+          <Title level={2} style={{ fontWeight: 'normal', marginTop: 0 }}>
+            我能帮您运送什么？
+          </Title>
         </div>
 
         {/* 消息输入区域 */}
@@ -132,13 +134,49 @@ export default function ChatPage() {
                 </Button>
               </div>
               <div>
-              
+                <Tag color="blue">Need more messages? Get higher limits with Premium.</Tag>
+                <Button type="link" size="small">Upgrade Plan 升级计划</Button>
               </div>
             </div>
           </Card>
         </div>
 
-       
+        {/* 快捷操作按钮 */}
+        <div style={{ textAlign: 'center', marginBottom: 60 }}>
+          <Space size="large" wrap>
+            <Button icon={<CopyOutlined />} size="large">
+              Clone a Screenshot 克隆屏幕截图
+            </Button>
+            <Button icon={<ImportOutlined />} size="large">
+              Import from Figma 从Figma导入
+            </Button>
+            <Button icon={<UploadOutlined />} size="large">
+              Upload a Project 上传项目
+            </Button>
+          </Space>
+        </div>
+
+        {/* 项目类型选择 */}
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <Space size="large" wrap style={{ justifyContent: 'center' }}>
+            {projectItems.map((item, index) => (
+              <Card 
+                key={index}
+                hoverable
+                style={{ width: 200, textAlign: 'center', borderRadius: 8 }}
+                bodyStyle={{ padding: '20px 16px' }}
+              >
+                <Space direction="vertical" size="small">
+                  {item.icon}
+                  <Text strong>{item.title}</Text>
+                  <Text type="secondary">{item.description}</Text>
+                </Space>
+              </Card>
+            ))}
+          </Space>
+        </div>
+
+    
       </Content>
     </Layout>
   );
