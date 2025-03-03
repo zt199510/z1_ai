@@ -7,12 +7,10 @@ import {
   Space, 
   Divider, 
   Menu, 
-  Switch,
   Dropdown,
   theme
 } from 'antd';
 import { 
-  UserOutlined, 
   TeamOutlined, 
   CreditCardOutlined, 
   SettingOutlined, 
@@ -24,7 +22,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { useToken } = theme;
 
 // 用户类型定义
@@ -43,6 +41,7 @@ interface UserProfileDrawerProps {
   onLogout?: () => void;
   onSwitchTeam?: () => void;
   onUpgradePlan?: () => void;
+  position?: 'top' | 'bottom';
 }
 
 const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
@@ -55,7 +54,8 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   },
   onLogout,
   onSwitchTeam,
-  onUpgradePlan
+  onUpgradePlan,
+  position = 'top' // 默认在顶部
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
@@ -126,6 +126,17 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     }
   };
 
+  // 用户信息栏位置样式
+  const positionStyle = position === 'top' 
+    ? {
+        top: 0,
+        borderBottom: `1px solid ${token.colorBorderSecondary}`,
+      } 
+    : {
+        bottom: 0,
+        borderTop: `1px solid ${token.colorBorderSecondary}`,
+      };
+
   return (
     <>
       {/* 用户信息栏 - 点击打开抽屉 */}
@@ -134,16 +145,15 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
         style={{
           position: 'fixed',
           left: 0,
-          bottom: 0,
           width: '240px',
           padding: '12px',
           background: token.colorBgContainer,
-          borderTop: `1px solid ${token.colorBorderSecondary}`,
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          zIndex: 1000,
+          zIndex: 1001, // 确保在侧边栏之上
+          ...positionStyle
         }}
       >
         <Space>
@@ -258,9 +268,9 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               <Text>Language 语言</Text>
               <Dropdown
                 menu={{
-                  items: languageOptions.map(lang => ({
-                    key: lang.value,
-                    label: lang.label
+                  items: languageOptions.map(option => ({
+                    key: option.value,
+                    label: option.label
                   })),
                   selectable: true,
                   defaultSelectedKeys: ['zh'],
@@ -279,10 +289,12 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
           </div>
         </div>
 
+        <Divider style={{ margin: '8px 0' }} />
+
         <div style={{ padding: '16px' }}>
           <Button 
             type="primary" 
-            block 
+            block
             onClick={handleUpgradePlan}
           >
             Upgrade Plan 升级计划

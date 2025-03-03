@@ -1,21 +1,23 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Flexbox } from 'react-layout-kit';
-import {
-  Layout,
-  Menu,
-  Typography,
-  Button,
-  Divider,
+import { 
+  Layout, 
+  Menu, 
+  Typography, 
+  Button, 
+  Divider, 
   Space,
   theme
 } from "antd";
-import {
-  TeamOutlined,
-  BookOutlined,
-  ProjectOutlined,
+import { 
+  TeamOutlined, 
+  BookOutlined, 
+  ProjectOutlined, 
   CommentOutlined,
   PlusOutlined,
-  RightOutlined
+  RightOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined
 } from '@ant-design/icons';
 import { useState } from "react";
 import UserProfileDrawer from "../components/ui/UserProfileDrawer";
@@ -26,7 +28,10 @@ const { Text } = Typography;
 const { useToken } = theme;
 
 // 最近的聊天记录
-const recentChats: any[] = [];
+const recentChats = [
+  { id: '1', title: '极简主义时事通讯' },
+  { id: '2', title: 'AI User Interface AI 用户界面' }
+];
 
 export default function SidebarLayout() {
   const navigate = useNavigate();
@@ -90,6 +95,7 @@ export default function SidebarLayout() {
         width={240}
         collapsible
         collapsed={collapsed}
+        trigger={null}
         onCollapse={(value) => setCollapsed(value)}
         style={{
           background: token.colorBgContainer,
@@ -104,22 +110,33 @@ export default function SidebarLayout() {
         }}
       >
         <Flexbox padding={16}>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
+          {/* 添加顶部的缩放按钮 */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            {!collapsed && <Text strong>Z1 AI</Text>}
+            <Button 
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{ fontSize: '16px', width: 64 }}
+            />
+          </div>
+          
+          <Button 
+            type="primary" 
+            icon={<PlusOutlined />} 
             style={{ width: '100%', marginBottom: 16 }}
             onClick={() => navigate('/')}
           >
             {!collapsed && 'New Chat 新聊天'}
           </Button>
-
+          
           <Menu
             mode="inline"
             selectedKeys={[currentPath.split('/')[1] || 'home']}
             style={{ border: 'none' }}
             items={menuItems}
           />
-
+          
           {!collapsed && (
             <>
               <Divider style={{ margin: '12px 0' }} />
@@ -127,11 +144,11 @@ export default function SidebarLayout() {
                 <Text type="secondary" style={{ fontSize: 12 }}>Recent Chats 最近聊天</Text>
                 <Space direction="vertical" style={{ width: '100%', marginTop: 8 }}>
                   {recentChats.map(chat => (
-                    <Button
+                    <Button 
                       key={chat.id}
-                      type="text"
-                      style={{
-                        textAlign: 'left',
+                      type="text" 
+                      style={{ 
+                        textAlign: 'left', 
                         height: 'auto',
                         padding: '4px 8px',
                         whiteSpace: 'normal',
@@ -143,19 +160,17 @@ export default function SidebarLayout() {
                   ))}
                 </Space>
               </div>
-
-              <div style={{ marginTop: 'auto', padding: '8px' }}>
-
-              </div>
+              
+            
             </>
           )}
         </Flexbox>
       </Sider>
-
+      
       {/* 主内容区 */}
       <Layout style={{ marginLeft: collapsed ? 80 : 240, transition: 'all 0.2s' }}>
-        <Content style={{
-          padding: '24px',
+        <Content style={{ 
+          padding: '24px', 
           background: token.colorBgContainer,
           minHeight: '100vh'
         }}>
@@ -164,12 +179,13 @@ export default function SidebarLayout() {
       </Layout>
 
       {/* 用户信息栏和抽屉菜单 */}
-      <UserProfileDrawer
+      <UserProfileDrawer 
         isLoggedIn={isLoggedIn}
         user={user || undefined}
         onLogout={handleLogout}
         onSwitchTeam={handleSwitchTeam}
         onUpgradePlan={handleUpgradePlan}
+        position="top"
       />
     </Layout>
   );
