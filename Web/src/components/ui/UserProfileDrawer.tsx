@@ -42,6 +42,8 @@ interface UserProfileDrawerProps {
   onSwitchTeam?: () => void;
   onUpgradePlan?: () => void;
   position?: 'top' | 'bottom';
+  open?: boolean;
+  onClose?: () => void;
 }
 
 const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
@@ -55,9 +57,11 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   onLogout,
   onSwitchTeam,
   onUpgradePlan,
-  position = 'top' // 默认在顶部
+  position = 'top', // 默认在顶部
+  open,
+  onClose
 }) => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [internalDrawerOpen, setInternalDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { token } = useToken();
 
@@ -65,6 +69,9 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   if (!isLoggedIn) {
     return null;
   }
+
+  // 使用外部控制的open状态或内部状态
+  const drawerOpen = open !== undefined ? open : internalDrawerOpen;
 
   // 主题选项
   const themeOptions = [
@@ -95,12 +102,19 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
 
   // 打开抽屉
   const showDrawer = () => {
-    setDrawerOpen(true);
+    if (open === undefined) {
+      setInternalDrawerOpen(true);
+    }
   };
 
   // 关闭抽屉
   const closeDrawer = () => {
-    setDrawerOpen(false);
+    if (open === undefined) {
+      setInternalDrawerOpen(false);
+    }
+    if (onClose) {
+      onClose();
+    }
   };
 
   // 处理登出
@@ -140,39 +154,41 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   return (
     <>
       {/* 用户信息栏 - 点击打开抽屉 */}
-      <div 
-        onClick={showDrawer}
-        style={{
-          position: 'fixed',
-          left: 0,
-          width: '240px',
-          padding: '12px',
-          background: token.colorBgContainer,
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 1001, // 确保在侧边栏之上
-          ...positionStyle
-        }}
-      >
-        <Space>
-          <Avatar 
-            size="small" 
-            style={{ 
-              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-              color: '#fff'
-            }}
-          >
-            {user.username.charAt(0).toUpperCase()}
-          </Avatar>
-          <div style={{ maxWidth: '160px', overflow: 'hidden' }}>
-            <Text ellipsis style={{ fontSize: '14px', display: 'block' }}>{user.username}</Text>
-            {renderPlanType()}
-          </div>
-        </Space>
-        <DownOutlined style={{ fontSize: '12px', color: token.colorTextSecondary }} />
-      </div>
+      {open === undefined && (
+        <div 
+          onClick={showDrawer}
+          style={{
+            position: 'fixed',
+            left: 0,
+            width: '240px',
+            padding: '12px',
+            background: token.colorBgContainer,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            zIndex: 1001, // 确保在侧边栏之上
+            ...positionStyle
+          }}
+        >
+          <Space>
+            <Avatar 
+              size="small" 
+              style={{ 
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                color: '#fff'
+              }}
+            >
+              {user.username.charAt(0).toUpperCase()}
+            </Avatar>
+            <div style={{ maxWidth: '160px', overflow: 'hidden' }}>
+              <Text ellipsis style={{ fontSize: '14px', display: 'block' }}>{user.username}</Text>
+              {renderPlanType()}
+            </div>
+          </Space>
+          <DownOutlined style={{ fontSize: '12px', color: token.colorTextSecondary }} />
+        </div>
+      )}
 
       {/* 用户抽屉菜单 */}
       <Drawer

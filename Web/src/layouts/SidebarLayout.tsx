@@ -7,7 +7,9 @@ import {
   Button, 
   Divider, 
   Space,
-  theme
+  theme,
+  Card,
+  Avatar
 } from "antd";
 import { 
   TeamOutlined, 
@@ -39,6 +41,7 @@ export default function SidebarLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { token } = useToken();
   const { isLoggedIn, user, logout } = useAuth();
+  const [showUserProfile, setShowUserProfile] = useState(false);
 
   // 获取当前路径
   const currentPath = location.pathname;
@@ -109,7 +112,7 @@ export default function SidebarLayout() {
           zIndex: 1000,
         }}
       >
-        <Flexbox padding={16}>
+        <Flexbox padding={16} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* 添加顶部的缩放按钮 */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             {!collapsed && <Text strong>Z1 AI</Text>}
@@ -160,10 +163,53 @@ export default function SidebarLayout() {
                   ))}
                 </Space>
               </div>
-              
-            
             </>
           )}
+          
+          {/* 在底部添加用户卡片 */}
+          <div style={{ marginTop: 'auto', paddingTop: 0 }}>
+            {!collapsed && (
+              <Card 
+                style={{ width: '100%', cursor: 'pointer' }}
+                bodyStyle={{ padding: '12px' }}
+                onClick={() => setShowUserProfile(true)}
+              >
+                <Space>
+                  <Avatar 
+                    size="small" 
+                    style={{ 
+                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                      color: '#fff'
+                    }}
+                  >
+                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                  </Avatar>
+                  <div style={{ maxWidth: collapsed ? '0' : '160px', overflow: 'hidden' }}>
+                    <Text ellipsis strong style={{ fontSize: '14px', display: 'block' }}>{user?.username || '用户'}</Text>
+                    <Text type="secondary" style={{ fontSize: '12px' }}>点击查看个人资料</Text>
+                  </div>
+                </Space>
+              </Card>
+            )}
+            {collapsed && (
+              <Button
+                type="text"
+                icon={
+                  <Avatar 
+                    size="small" 
+                    style={{ 
+                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                      color: '#fff'
+                    }}
+                  >
+                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                  </Avatar>
+                }
+                style={{ width: '100%', marginBottom: 0, padding: '8px 0' }}
+                onClick={() => setShowUserProfile(true)}
+              />
+            )}
+          </div>
         </Flexbox>
       </Sider>
       
@@ -186,6 +232,8 @@ export default function SidebarLayout() {
         onSwitchTeam={handleSwitchTeam}
         onUpgradePlan={handleUpgradePlan}
         position="top"
+        open={showUserProfile}
+        onClose={() => setShowUserProfile(false)}
       />
     </Layout>
   );
