@@ -1,0 +1,1 @@
+﻿global using Z1.Core.Extensions;
