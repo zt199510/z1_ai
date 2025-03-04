@@ -14,7 +14,31 @@ public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> opt
 {
     public DbSet<User> Users { get; set; }
 
-   
+    public DbSet<UserOAuth> UserOAuths { get; set; }
+
+    public DbSet<Session> Sessions { get; set; }
+
+    public DbSet<SessionGroup> SessionGroups { get; set; }
+
+    public DbSet<MessageText> MessageTexts { get; set; }
+
+    public DbSet<MessageFile> MessageFiles { get; set; }
+
+    public DbSet<MessageModelUsage> MessageModelUsages { get; set; }
+
+    public DbSet<Message> Messages { get; set; }
+
+    public DbSet<FileStorage> FileStorages { get; set; }
+
+    public DbSet<Model> Models { get; set; }
+
+    public DbSet<ChatMessage> ChatMessages { get; set; }
+
+    public DbSet<ModelChannel> ModelChannels { get; set; }
+
+    public DbSet<ModelChannelShareUser> ModelChannelShareUsers { get; set; }
+
+    public DbSet<ModelChannelInviteCode> ModelChannelInviteCodes { get; set; }
 
     public async Task SaveChangesAsync()
     {

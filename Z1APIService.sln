@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{07FBB1FD-D090-4653-8B1D-2B33831F7B3B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A875FE6-596E-487D-A297-C7503E95908E}"
+	ProjectSection(SolutionItems) = preProject
+		migrations.bat = migrations.bat
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework", "EntityFramework", "{D5D3B299-66DF-444C-BDA1-D52B201853BA}"
 EndProject
