@@ -30,7 +30,7 @@ interface Message {
   content: string;
   timestamp: Date;
 }
-import VercelAIChat from '../AIAssistant';
+import VercelAIChat from '../Chat';
 
 
 const Chat: React.FC = () => {

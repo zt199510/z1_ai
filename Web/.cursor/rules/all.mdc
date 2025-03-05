@@ -1,7 +1,7 @@
 ---
 description: 默认
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ---
 description: 全局规则，应该应用到所有的文本
