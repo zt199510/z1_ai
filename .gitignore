@@ -1,0 +1,72 @@
+# Visual Studio 临时文件
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio 2015/2017 缓存/选项目录
+.vs/
+# 取消注释如果你有使用自动生成的文件夹的任务
+#wwwroot/
+
+# Visual Studio 2017 自动生成的文件
+Generated\ Files/
+
+# MSTest 测试结果
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+
+# Build 结果
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 代码覆盖率结果
+*.coverage
+*.coveragexml
+
+# NuGet 包
+*.nupkg
+# NuGet Symbol 包
+*.snupkg
+# 包文件夹可以被忽略
+**/[Pp]ackages/*
+# 除非你想要检查 NuGet 缓存文件
+!**/[Pp]ackages/build/
+# 取消注释如果需要，但通常这些文件不应该被包含
+#!**/[Pp]ackages/repositories.config
+# NuGet v3 项目.json 文件产生的文件
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio 缓存文件
+# 文件以 .cache 结尾并且以 .*开头的文件
+*.[Cc]ache
+# 但是保留目录 directory.packages.props 和 directory.build.props
+!?*.[Cc]ache/
+
+# 其他
+ClientBin/
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs 
