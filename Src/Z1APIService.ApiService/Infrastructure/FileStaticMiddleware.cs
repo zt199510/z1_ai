@@ -17,7 +17,7 @@ public class FileStaticMiddleware : IMiddleware
             }
         }
         context.Response.Headers["Owl-Chat"] = Version;
-        context.Response.Headers["AI-Gateway-Name"] = "Owl-Chat";
+        context.Response.Headers["AI-Gateway-Name"] = "Z1-Chat";
 
         if (context.Request.Path.Value?.EndsWith(".js") == true)
         {

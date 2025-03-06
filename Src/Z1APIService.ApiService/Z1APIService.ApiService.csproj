@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityFramework\EntityFramework.Sqlite\EntityFramework.Sqlite.csproj" />
+    <ProjectReference Include="..\Storages\Storage.LiteDB\Storage.LiteDB.csproj" />
     <ProjectReference Include="..\Z1.Core\Z1.Core.csproj" />
     <ProjectReference Include="..\Z1APIService.ServiceDefaults\Z1APIService.ServiceDefaults.csproj" />
   </ItemGroup>

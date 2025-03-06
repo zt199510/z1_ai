@@ -17,8 +17,8 @@ public class VerificationService(ICaptcha captcha) : FastApi
     public Task<VerificationDto> GetAsync(string type)
     {
         var uuid = type + ":" + Guid.NewGuid().ToString("N");
-
         var code = captcha.Generate(uuid, 240);
+
 
         return Task.FromResult(new VerificationDto
         {

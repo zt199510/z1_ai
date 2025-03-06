@@ -16,6 +16,9 @@ public sealed class FileStorage : Entity<string>
     /// </summary>
     public string FileName { get; set; } = null!;
 
+    /// <summary>
+    /// 文件类型
+    /// </summary>
     public string ContentType { get; set; } = null!;
 
     /// <summary>
