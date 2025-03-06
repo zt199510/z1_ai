@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { message, notification } from 'antd';
-import Verification from '../../../apis/Verification';
+import Verification from '@/apis/Verification';
+import { AuthRegister } from '@/apis/Auth';
+import { RegisterInput } from '@/types/Auth';
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterValues {
   email: string;
@@ -16,9 +19,10 @@ export const useRegister = () => {
     code: '',
     id: ''
   });
+  const navigate = useNavigate();
+
   // 生成随机验证码
   const generateCaptcha = async () => {
-
     try {
       const res = await Verification('register');
       if (res.success) {
@@ -37,8 +41,6 @@ export const useRegister = () => {
     }
   };
 
-
-
   // 注册方法
   const register = async (values: RegisterValues): Promise<boolean> => {
     setLoading(true);
@@ -51,17 +53,36 @@ export const useRegister = () => {
         return false;
       }
 
-      // 验证验证码
-
-
-      // 模拟注册请求
-      // 在实际应用中，这里应该调用API进行注册
-      return await new Promise((resolve) => {
+      // 构建注册请求参数
+      const registerInput: RegisterInput = {
+        userName: values.username,
+        displayName: values.username,
+        passwordHash: values.password,
+        email: values.email,
+        phone: null,
+        code: values.captcha,
+        codeId: codeImage.id
+      };
+      
+      // 调用注册API
+      const response = await AuthRegister(registerInput);
+      
+      if (response.success) {
+        setLoading(false);
+        message.success('注册成功');
+        
+        // 注册成功后跳转到登录页面
         setTimeout(() => {
-          // 调用auth中的register方法
-          setLoading(false);
+          navigate('/auth/login');
         }, 1500);
-      });
+        
+        return true;
+      } else {
+        setLoading(false);
+        message.error(response.message || '注册失败');
+        generateCaptcha(); // 刷新验证码
+        return false;
+      }
     } catch (error) {
       console.error('注册出错:', error);
       message.error('注册过程中出现错误');

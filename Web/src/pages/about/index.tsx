@@ -82,7 +82,7 @@ export default function About() {
 
     return (
         <Layout style={{ background: '#fff' }}>
-            <Flexbox align="flex-start" padding={24}>
+            {/* <Flexbox align="flex-start" padding={24}>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -104,7 +104,7 @@ export default function About() {
                         
                     </Button>
                 </motion.div>
-            </Flexbox>
+            </Flexbox> */}
             <Content>
                 <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px' }}>
                     {/* 头部介绍 */}

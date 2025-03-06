@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: 代码规范指南，适用于项目中的TypeScript和React代码
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+# 代码规范指南
+
+## 目录结构规范
+- @apis: 存放所有API请求相关代码
+- @pages: 存放所有页面组件
+- @types: 存放所有TypeScript类型定义
+- @utils: 存放工具函数
+- @components: 存放可复用组件
+
+## API请求规范 (@apis目录)
+- 每个API模块使用单独的文件，文件名使用Pascal命名法（如`Auth.ts`）
+- 函数使用驼峰命名法，名称应表达功能（如`getCurrentUser`）
+- GET请求函数以`get`开头，POST请求函数以`create/update`开头，DELETE请求函数以`delete`开头
+- 所有函数必须使用JSDoc注释，包含功能描述、参数说明和返回值说明
+- 使用`@/utils/fetch`中的方法进行HTTP请求：`get`, `post`, `postJson`, `putJson`, `del`
+
+## 页面组件规范 (@pages目录)
+- 使用`ServerLayout`组件实现响应式布局，桌面端和移动端组件分别放在`_layout`目录下
+- 使用函数组件和React Hooks，组件名和文件名使用Pascal命名法
+- 优先使用Ant Design组件的样式属性，复杂样式使用CSS模块或styled-components
+- 表单处理使用Ant Design的Form组件，定义清晰的验证规则
+
+## 类型定义规范 (@types目录)
+- 文件名与主要类型相关，使用Pascal命名法
+- 接口命名使用Pascal命名法，数据传输对象接口以`Dto`结尾，输入类型接口以`Input`结尾
+- 枚举名和枚举值使用Pascal命名法，提供有意义的字符串值
+- 使用接口继承来复用类型定义，基础实体类型继承自`EntityDto`
+
+## 代码风格通用规范
+- 变量和函数使用驼峰命名法，类/接口/类型/枚举使用Pascal命名法，常量使用全大写下划线分隔
+- 使用2个空格缩进，花括号前添加空格，逗号后添加空格，操作符前后各添加空格
+- 使用JSDoc风格注释，复杂逻辑添加行内注释，临时代码标记为TODO
+- 导入排序：第三方库 > 绝对路径(@别名) > 相对路径，每组之间空一行
+
+## 最佳实践
+- 使用React Hooks管理组件状态，复杂状态考虑使用Context API或Redux
+- 使用async/await处理异步操作，适当处理加载和错误状态
+- 使用React.memo避免不必要重渲染，使用useCallback和useMemo缓存函数和计算结果
+- 不在前端存储敏感信息，API请求使用token认证，表单数据进行验证
+
+## 版本控制
+- 使用明确的提交信息描述变更，遵循约定式提交规范
+- 主分支保持稳定，功能开发使用feature分支，修复bug使用hotfix分支
