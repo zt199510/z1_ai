@@ -1,18 +1,11 @@
-import React from 'react';
-import HomePage from '../pages/index';
-import GlobalLayout from "../layouts/GlobalLayout";
+import { lazy, Suspense } from "react";
 import SidebarLayout from "../layouts/SidebarLayout";
 import Login from "../pages/Account/Login";
 import Chat from "../pages/Chats/chat";
-
-// 简单的组件页面
-const SimpleComponentsPage = () => (
-  <div className="container mx-auto px-4 py-8">
-    <h1 className="text-3xl font-bold mb-4">组件库</h1>
-    <p className="mb-4">这是组件库展示页面。</p>
-  </div>
-);
-
+import LoadingSpinner from "@/components/LoadingSpinner";
+// 懒加载所有页面组件
+const HomePage = lazy(() => import("../pages/index"));
+const RegisterPage = lazy(() => import("../pages/Account/Registers"));
 // 路由配置
 export const routes = [
   // 主布局路由
@@ -22,7 +15,7 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <Suspense fallback={<LoadingSpinner />}><HomePage /></Suspense>,
       },
       {
         path: 'about',
@@ -31,21 +24,6 @@ export const routes = [
           const AboutPage = await import('../pages/about').then(module => module.default);
           return { element: <AboutPage /> };
         },
-      },
-      // 组件库展示页面
-      {
-        path: 'components',
-        element: <SimpleComponentsPage />,
-      },
-      // 登录页面
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      // 聊天页面
-      {
-        path: 'chat',
-        element: <Chat />,
       },
       {
         path: '*',
@@ -56,16 +34,13 @@ export const routes = [
       },
     ],
   },
-  // 社区路由
   {
-    path: '/community',
-    element: <SidebarLayout />,
-    children: [
-      {
-        index: true,
-        element: <div>社区首页</div>,
-      },
-    ],
+    path: '/auth/register',
+    element: <RegisterPage />,
+  },
+  {
+    path: '/auth/login',
+    element: <Login />,
   },
   // 图书馆路由
   {

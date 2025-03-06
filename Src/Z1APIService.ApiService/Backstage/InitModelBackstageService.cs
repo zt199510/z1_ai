@@ -94,9 +94,7 @@ public sealed class InitModelBackstageService(
     {
         // 判断是否已经初始化
         if (await context.ModelChannels.AnyAsync())
-        {
             return;
-        }
 
         // 初始化用户
         var user = new User

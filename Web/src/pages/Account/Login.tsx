@@ -11,40 +11,15 @@ import {
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth'; 
-
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, isLoggedIn } = useAuth();
-
-  // 如果已经登录，重定向到首页
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/chat');
-    }
-  }, [isLoggedIn, navigate]);
-
   // 处理登录
   const handleLogin = (values: { email: string; password: string }) => {
     setLoading(true);
-    
-    // 模拟登录请求
-    setTimeout(() => {
-      const success = login(values.email, values.password);
-      
-      if (success) {
-        message.success('登录成功');
-        navigate('/chat');
-      } else {
-        message.error('登录失败，请检查邮箱和密码');
-      }
-      
-      setLoading(false);
-    }, 1000);
   };
 
   return (
@@ -111,7 +86,7 @@ export default function Login() {
           
           <Space style={{ width: '100%', justifyContent: 'center' }}>
             <Button type="link">忘记密码?</Button>
-            <Button type="link" onClick={() => navigate('/register')}>
+            <Button type="link" onClick={() => navigate('/auth/register')}>
               注册新账户
             </Button>
           </Space>

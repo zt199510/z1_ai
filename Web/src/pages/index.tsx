@@ -41,35 +41,6 @@ export default function ChatPage() {
       icon: <FormOutlined />,
     }
   ];
-
-  // 社区项目
-  const communityProjects = [
-    {
-      id: '1',
-      title: 'AI Chat Interface',
-      description: 'AI 聊天界面',
-      image: 'https://via.placeholder.com/300x200',
-    },
-    {
-      id: '2',
-      title: 'Portfolio',
-      description: '投资组合',
-      image: 'https://via.placeholder.com/300x200',
-    },
-    {
-      id: '3',
-      title: 'Hoodie Store',
-      description: '卫衣商店',
-      image: 'https://via.placeholder.com/300x200',
-    },
-    {
-      id: '4',
-      title: 'AI Card Generation',
-      description: 'AI 卡片生成',
-      image: 'https://via.placeholder.com/300x200',
-    }
-  ];
-
   return (
     <Layout style={{ background: '#fff', height: '95vh' }}>
       <Content style={{ padding: '40px 20px', maxWidth: 1200, margin: '0 auto' }}>

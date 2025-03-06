@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Z1APIService.ApiService\Z1APIService.ApiService.csproj" />
-    <ProjectReference Include="..\Z1APIService.Web\Z1APIService.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

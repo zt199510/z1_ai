@@ -51,9 +51,7 @@ if (runMigration)
 {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>();
-
     await dbContext.MigrateAsync();
-
 }
 
 await app.RunAsync();
