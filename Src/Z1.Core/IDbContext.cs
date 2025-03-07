@@ -31,7 +31,7 @@ public interface IDbContext
 
     DbSet<Model> Models { get; set; }
 
-    //DbSet<ChatMessage> ChatMessages { get; set; }
+    DbSet<ChatMessage> ChatMessages { get; set; }
 
     /// <summary>
     /// 模型渠道
@@ -46,7 +46,7 @@ public interface IDbContext
     /// <summary>
     /// 模型渠道邀请码
     /// </summary>
-    //DbSet<ModelChannelInviteCode> ModelChannelInviteCodes { get; set; }
+    DbSet<ModelChannelInviteCode> ModelChannelInviteCodes { get; set; }
 
     Task SaveChangesAsync();
 

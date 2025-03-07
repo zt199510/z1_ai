@@ -240,7 +240,7 @@ const Composer: FC = () => {
             <ComposerPrimitive.Input
                 rows={1}
                 autoFocus
-                placeholder="Write a message..."
+                placeholder="请输入..."
                 className="max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none placeholder:text-muted-foreground focus:ring-0 disabled:cursor-not-allowed"
             />
             <ComposerAction />
