@@ -13,7 +13,7 @@ export default function Desktop() {
     useEffect(() => {
         // 从URL中获取对话ID
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('ID'); // 注意这里使用大写的'ID'来匹配请求格式
+        const id = urlParams.get('id'); // 注意这里使用大写的'ID'来匹配请求格式
         if (id) {
             setChatId(id);
             console.log('Found conversation ID in URL:', id);

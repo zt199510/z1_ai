@@ -15,4 +15,10 @@ export interface ChatCompleteParams {
     assistantMessageId: number;
     functionCalls: string[];
     networking: boolean;
-  }
+}
+
+export interface ChatCompleteInput {
+    sessionId?: number;
+    value?: string;
+    files?: any[];
+}

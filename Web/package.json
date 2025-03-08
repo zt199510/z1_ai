@@ -36,7 +36,8 @@
     "tailwind-merge": "^3.0.2",
     "ua-parser-js": "^2.0.2",
     "uuid": "^11.1.0",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "zustand-utils": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -3,3 +3,10 @@ export interface CreateSession {
     description: string,
     modelId: string,
 }
+
+
+export interface CreateSessionInput {
+    modelId: string;
+    value: string;
+    files?: any[];
+}
