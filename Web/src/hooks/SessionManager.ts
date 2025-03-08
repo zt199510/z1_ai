@@ -1,8 +1,8 @@
 import { StateCreator } from "zustand";
 import { createSession, getRecentSessions } from "@/apis/Session";
-import { ChatState } from "@/stores/ChatState";
 import { CreateSessionInput } from "@/types/Sessionts";
 import { ChatCompleteInput } from "@/types/Chat";
+import { ChatStore } from "@/stores/chatStore";
 
 /**
  * 会话管理器接口
@@ -29,11 +29,7 @@ export interface SessionManager {
     chatComplete: (input: ChatCompleteInput) => Promise<void>;
 }
 
-/**
- * 聊天存储类型
- * 结合了聊天状态和会话管理功能
- */
-export type ChatStore = ChatState & SessionManager;
+
 
 /**
  * 会话管理器实现
@@ -41,7 +37,7 @@ export type ChatStore = ChatState & SessionManager;
  */
 export const useSessionManager: StateCreator<
     ChatStore,
-    [],
+    [['zustand/devtools', never]],
     [],
     SessionManager
 > = (set, get) => ({
