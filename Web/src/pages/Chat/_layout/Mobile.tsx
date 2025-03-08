@@ -16,7 +16,7 @@ import {
   useLocalRuntime,
   type ChatModelAdapter
 } from "@assistant-ui/react";
-import { Thread } from '../components/assistant-ui/thread';
+
 
 const { Content } = Layout;
 const { Text, Paragraph } = Typography;
@@ -55,7 +55,7 @@ export default function Mobile() {
     <div className="h-full w-full">
       <AssistantRuntimeProvider runtime={runtime}>
         <div className="h-full w-full">
-          <Thread />
+        
         </div>
       </AssistantRuntimeProvider>
     </div>

@@ -54,6 +54,7 @@
     "postcss": "^8.4.32",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vite": "^5.0.10"
+    "vite": "^5.0.10",
+    "vite-plugin-svgr": "^4.3.0"
   }
 }

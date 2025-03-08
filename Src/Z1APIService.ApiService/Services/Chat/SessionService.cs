@@ -80,7 +80,6 @@ public class SessionService(
     {
         sessionInput.Avatar = "🧸";
         var session = mapper.Map<Session>(sessionInput);
-
         session.CreatedBy = userContext.UserId;
         session.CreatedAt = DateTime.Now;
         session.Model = sessionInput.ModelId;
