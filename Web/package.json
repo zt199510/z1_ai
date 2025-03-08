@@ -11,9 +11,6 @@
   },
   "dependencies": {
     "@ant-design/x": "^1.0.5",
-    "@assistant-ui/react": "^0.8.4",
-    "@assistant-ui/react-markdown": "^0.8.0",
-    "@assistant-ui/react-syntax-highlighter": "^0.8.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^1.0.6",
     "@langchain/core": "^0.3.42",

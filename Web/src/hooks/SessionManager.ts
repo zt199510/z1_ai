@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { createSession, getRecentSessions } from "@/apis/Session";
+import { createSession, getSessionLite } from "@/apis/Session";
 import { CreateSessionInput } from "@/types/Sessionts";
 import { ChatCompleteInput } from "@/types/Chat";
 import { ChatStore } from "@/stores/chatStore";
@@ -21,7 +21,7 @@ export interface SessionManager {
      * @returns 返回创建的会话ID
      */
     createSession: (input: CreateSessionInput) => Promise<number>;
-    
+
     /**
      * 发送聊天消息并获取回复
      * @param input 聊天参数
@@ -46,12 +46,12 @@ export const useSessionManager: StateCreator<
      * 从服务器获取最近的会话列表
      */
     loadSessions: async (value: string) => {
-        const result = await getRecentSessions();
+        const result = await getSessionLite(value);
         if (result.success) {
             set({ sessions: result.data });
         }
     },
-    
+
     /**
      * 创建新会话
      * 创建会话并发送初始消息
@@ -67,7 +67,7 @@ export const useSessionManager: StateCreator<
             description: '默认会话',
             modelId: modelId,
         });
-        
+
         // 更新状态
         set({ currentSession: result.data, messages: [] });
         await get().loadSessions('');
@@ -83,7 +83,7 @@ export const useSessionManager: StateCreator<
 
         return result.data.id;
     },
-    
+
     /**
      * 发送聊天消息并获取回复
      * 处理聊天完成逻辑
