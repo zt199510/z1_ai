@@ -4,6 +4,6 @@ import Mobile from './_layout/Mobile';
 
 const Layout = ServerLayout({ Desktop, Mobile });
 
-Layout.displayName = 'ChatLayout';
+Layout.displayName = 'ConversationsLayout';
 
 export default Layout; 

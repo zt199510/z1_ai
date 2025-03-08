@@ -7,7 +7,8 @@ const RegisterPage = lazy(() => import("../pages/Account/Registers"));
 const LoginPage = lazy(() => import("../pages/Account/Login"));
 const AboutPage = lazy(() => import("../pages/about"));
 const UserProfilePage = lazy(() => import("../pages/Users/UserInfo/UserProfile"));
-const ChatPage = lazy(() => import("../pages/Chat"));
+const ChatPage = lazy(() => import("../pages/ChatWelcome"));
+const ConversationsPage = lazy(() => import("../pages/Conversations"));
 // 路由配置
 export const routes = [
   // 主布局路由
@@ -18,6 +19,10 @@ export const routes = [
       {
         index: true,
         element: <Suspense fallback={<LoadingSpinner />}><ChatPage /></Suspense>,
+      },
+      {
+        path: 'conversations',
+        element: <Suspense fallback={<LoadingSpinner />}><ConversationsPage /></Suspense>,
       },
       {
         path: 'about',

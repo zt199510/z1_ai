@@ -3,6 +3,7 @@ import { Button, Popconfirm, PopconfirmProps, Tooltip } from "antd";
 import ToggleSidebar from "@/app/images/hideSidebar.svg?react";
 import ModelSelect from '../components/ModelSelect';
 import { useEffect } from 'react';
+import { DeleteOutlined } from '@ant-design/icons';
 const ChatHeader = (props: { isActionsHidden?: boolean }) => {
     const { isSidebarCollapsed, toggleSidebar, setIsSidebarCollapsed } = useAppStore();
     useEffect(() => {
@@ -10,6 +11,28 @@ const ChatHeader = (props: { isActionsHidden?: boolean }) => {
         // setIsSidebarCollapsed(true);
     }, [isSidebarCollapsed]);
 
+
+    const deleteChat = async () => {
+        // if (chat && chat.id) {
+        //     await deleteChatInServer(chat.id)
+        //     const updatedChatList = chatList.filter(i => i.id !== chat.id);
+        //     setChatList(updatedChatList);
+
+        //     // 跳转到更新后的第一个聊天（如果存在）
+        //     // if (updatedChatList.length > 0) {
+        //     //     router.push(`/chat/${updatedChatList[0].id}`);
+        //     // } else {
+        //     //     router.push('/'); // 如果没有聊天记录，跳回根路径
+        //     // }
+        // }
+    };
+
+
+    const confirmDelete: PopconfirmProps['onConfirm'] = (e) => {
+        deleteChat()
+    };
+
+    const cancelDelete: PopconfirmProps['onCancel'] = (e) => { };
 
     return (
         <div className="h-10 flex w-full bg-gray-50 shadow-sm grow-0  items-center p-2 justify-between">
@@ -25,18 +48,18 @@ const ChatHeader = (props: { isActionsHidden?: boolean }) => {
             </div>
             {!props.isActionsHidden && <div className='mr-2'>
 
-                {/* 
+
                 <Popconfirm
-                    title={t('deleteCurrentChat')}
-                    description={t('clearHistoryMessageNotice')}
+                    title={('删除当前对话')}
+                    description={('当前对话的所有记录将被删除')}
                     onConfirm={confirmDelete}
                     onCancel={cancelDelete}
-                    okText={t('confirm')}
-                    cancelText={t('cancel')}
+                    okText={('确定')}
+                    cancelText={('取消')}
                 >
                     <Button type='text'
                         icon={<DeleteOutlined style={{ color: 'gray' }} />} />
-                </Popconfirm> */}
+                </Popconfirm>
             </div>
             }
 

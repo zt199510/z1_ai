@@ -46,7 +46,7 @@ const DesktopSidebar: React.FC = () => {
   // 菜单项配置
   const items: MenuItem[] = [
     getItem('首页', '/', <HomeOutlined />),
-    getItem('帮助中心', '/help', <QuestionCircleOutlined />),
+    getItem('帮助中心', '/conversations', <QuestionCircleOutlined />),
     getItem('关于我们', '/about', <InfoCircleOutlined />),
   ];
 

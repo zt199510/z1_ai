@@ -12,7 +12,7 @@ using Z1APIService.ApiService.Services.Chat.Dto;
 using Z1APIService.ApiService.Services.Chat.Param;
 
 namespace Z1APIService.ApiService.Services.Chat;
-
+ 
 [Tags("Chat")]
 [Authorize]
 [Filter(typeof(ResultFilter))]
@@ -39,7 +39,6 @@ public class SessionService(
 
         return dto;
     }
-
 
     /// <summary>
     /// 取消或者收藏会话
@@ -96,7 +95,6 @@ public class SessionService(
 
         return session;
     }
-
 
     /// <summary>
     /// 删除会话

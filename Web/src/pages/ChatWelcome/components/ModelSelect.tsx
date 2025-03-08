@@ -1,13 +1,24 @@
-
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Select, ConfigProvider } from "antd";
 import useModelListStore from '@/stores/modelList';
 import { Avatar } from "antd";
 const ModelSelect = () => {
-    const { currentModel, modelList, setModelList, providerList, providerListByKey, allProviderListByKey } = useModelListStore();
+    const { currentModel, modelList, setModelList, providerList, providerListByKey, allProviderListByKey, setCurrentModelExact, setCurrentModel } = useModelListStore();
+    
+    // Initialize a default model if none is selected
+    useEffect(() => {
+        if (modelList.length > 0 && (!currentModel || !currentModel.provider)) {
+            // Find the first model with a valid provider
+            const defaultModel = modelList.find(model => model.provider && model.selected);
+            if (defaultModel) {
+                setCurrentModel(defaultModel);
+            }
+        }
+    }, [modelList, currentModel, setCurrentModel]);
+    
     const handleChangeModel = (value: string) => {
         const [providerId, modelId] = value.split('|');
-        // setCurrentModelExact(providerId, modelId);
+        setCurrentModelExact(providerId, modelId);
     };
     const options = providerList.map((provider) => {
         return {
@@ -34,6 +45,12 @@ const ModelSelect = () => {
             }))
         }
     });
+    
+    // If currentModel or currentModel.provider is null, we can't render the Select component properly
+    if (!currentModel || !currentModel.provider) {
+        return null; // Or return a loading state or default component
+    }
+    
     return (
         <ConfigProvider
             theme={{

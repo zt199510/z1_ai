@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Alert } from 'antd';
 import GreetingHeader from '../components/GreetingHeader';
 import ChatHeader from '../components/ChatHeader';
-
+import AdaptiveTextarea from '../components/AdaptiveTextarea';
+import { useChat } from '../hooks/useChat';
 
 export default function Desktop() {
     const [showGuideAlert, setShowGuideAlert] = useState(false);
@@ -24,7 +25,15 @@ export default function Desktop() {
         }
         setGreetingText((getGreeting()));
     }, []);
-
+    const newChat = async (text: string, attachments?: Array<{ mimeType: string; data: string }>) => {
+        const { createSession } = useChat();
+        const session = await createSession({
+            name: 'New Chat',
+            description: 'New Chat',
+            modelId: 'gpt-4o',
+        });
+        console.log(session);
+    }
 
     return (
         <>
@@ -40,7 +49,7 @@ export default function Desktop() {
             <div className='flex w-full grow flex-col items-center justify-center h-full'>
                 <div className='container max-w-3xl mx-auto -mt-16 relative items-center justify-center'>
                     <GreetingHeader greetingText={greetingText} />
-                    {/* <AdaptiveTextarea model={currentModel} submit={newChat} /> */}
+                    <AdaptiveTextarea model={'Gpt-4o'} submit={newChat} />
                 </div>
             </div>
         </>

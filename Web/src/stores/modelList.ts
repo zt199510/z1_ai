@@ -11,6 +11,8 @@ interface IModelListStore {
     isPending: Boolean;
     setIsPending: (isPending: Boolean) => void;
     setModelList: (modelList: any[]) => void;
+    setCurrentModel: (model: any) => void;
+    setCurrentModelExact: (providerId: string, modelId: string) => void;
     initAllProviderList: (providers: LLMModelProvider[]) => Promise<void>;
 }
 
@@ -29,6 +31,14 @@ const useModelListStore = create<IModelListStore>((set, get) => ({
         }));
     },
     setModelList: (modelList: any[]) => set({ modelList }),
+    setCurrentModel: (model: any) => set({ currentModel: model }),
+    setCurrentModelExact: (providerId: string, modelId: string) => {
+        const { modelList } = get();
+        const model = modelList.find(m => m.provider.id === providerId && m.id === modelId);
+        if (model) {
+            set({ currentModel: model });
+        }
+    },
     initAllProviderList: async (providers: LLMModelProvider[]) => {
         const providerByKey = providers.reduce<{ [key: string]: LLMModelProvider }>((result, provider) => {
             result[provider.id] = provider;
