@@ -1,6 +1,6 @@
 import React from 'react';
 import { Skeleton, Dropdown } from 'antd';
-import Link from 'antd/lib/typography/Link';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import MenuSection from './MenuSection';
 
@@ -64,13 +64,13 @@ const ChatListSection: React.FC<ChatListSectionProps> = ({
             }
             <ul className="pr-4">
               {top8ChatsWithoutBot.map((chat) => (
-                <Link key={chat.id} href={`/chat/${chat.id}`}>
+                <Link key={chat.id} to={`/conversations/${chat.id}`} className="no-underline">
                   <li key={chat.id}
                     style={{ fontSize: '13px' }}
                     className={clsx({ "bg-white hover:bg-white font-medium text-gray-800": chat.id === currentChatId }, { "bg-gray-200": highlightedChat === chat.id }, "pr-2 ml-5 pl-3 py-1.5 rounded-xl text-gray-500 relative group mt-1 hover:bg-gray-200")}>
                     <div className="flex items-center justify-between w-full grow">
                       <div className="whitespace-nowrap w-0 grow overflow-hidden text-ellipsis"
-                      >{chat.title}</div>
+                      >{chat.name}</div>
                       <Dropdown
                         menu={{
                           items: getItems(chat.isStar || false), onClick: (e) => {
@@ -79,7 +79,7 @@ const ChatListSection: React.FC<ChatListSectionProps> = ({
                               deleteChat(chat.id);
                             }
                             if (e.key === 'edit') {
-                              setNewChatName(chat.title || '');
+                              setNewChatName(chat.name || '');
                               setRenameChatId(chat.id);
                               showEditModal();
                             }
@@ -102,7 +102,7 @@ const ChatListSection: React.FC<ChatListSectionProps> = ({
                   </li>
                 </Link>
               ))}
-              {isOver8 && <Link href='/chat/thread/list'>
+              {isOver8 && <Link to='/chat/thread/list' className="no-underline">
                 <li
                   style={{ fontSize: '13px' }}
                   className={clsx({ "bg-white hover:bg-white font-medium text-gray-800": '/chat/thread/list' === pathname }, "pr-2 ml-5 pl-3 py-1.5 rounded-xl text-gray-500 relative group mt-1 hover:bg-gray-200")}>
@@ -119,7 +119,7 @@ const ChatListSection: React.FC<ChatListSectionProps> = ({
 
       <MenuSection title={t('myBots')} icon={<Spark width={20} height={20} alt='spark' />} defaultExpanded={false}>
         <ul className="pr-4">
-          <Link href={`/chat/bot/discover`}>
+          <Link to='/chat/bot/discover' className="no-underline">
             <li
               style={{ fontSize: '13px' }}
               className={clsx({ 'bg-white font-medium text-gray-800': pathname === '/bot/discover' }, "pr-2 ml-0 pl-2 py-2 rounded-xl text-gray-500 relative group mt-1 hover:bg-gray-200")}>
@@ -146,7 +146,7 @@ const ChatListSection: React.FC<ChatListSectionProps> = ({
             }
           }
           ).map((chat) => (
-            <Link key={chat.id} href={`/chat/${chat.id}`}>
+            <Link key={chat.id} to={`/chat/${chat.id}`} className="no-underline">
               <li key={chat.id}
                 style={{ fontSize: '13px' }}
                 className={clsx({ "bg-white hover:bg-white font-medium text-gray-800": chat.id === currentChatId }, { "bg-gray-200": highlightedChat === chat.id }, "pr-2 ml-0 pl-2 py-2 rounded-xl text-gray-500 relative group mt-1 hover:bg-gray-200")}>

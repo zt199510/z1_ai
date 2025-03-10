@@ -7,13 +7,15 @@ interface MessageInputProps {
     submit: (message: string, attachments?: Array<{ mimeType: string; data: string }>) => void;
     maxRows?: number;
     lineHeight?: number;
+    onHeightChange?: (height: number) => void;
 }
 
 const MessageInput = (props: MessageInputProps) => {
     const {
         submit,
         maxRows = 4,
-        lineHeight = 24
+        lineHeight = 24,
+        onHeightChange
     } = props;
 
     const [text, setText] = useState('');
@@ -45,6 +47,11 @@ const MessageInput = (props: MessageInputProps) => {
         // Set the new height
         textarea.style.height = `${newHeight}px`;
         setTextareaHeight(newHeight);
+        
+        // Notify parent component about height change
+        if (onHeightChange) {
+            onHeightChange(newHeight);
+        }
     };
 
     // Update textarea height when text changes

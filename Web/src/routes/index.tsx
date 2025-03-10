@@ -21,12 +21,12 @@ export const routes = [
         element: <Suspense fallback={<LoadingSpinner />}><ChatPage /></Suspense>,
       },
       {
-        path: 'conversations',
+        path: 'conversations/:id',
         element: <Suspense fallback={<LoadingSpinner />}><ConversationsPage /></Suspense>,
       },
       {
         path: 'about',
-        element: <AboutPage />,
+        element: <Suspense fallback={<LoadingSpinner />}><AboutPage /></Suspense>,
       },
       {
         path: 'users/profile',

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Modal, Spin } from 'antd';
-import { DeleteOutlined, SettingOutlined } from '@ant-design/icons';
+import { Button, Modal, Spin, Avatar, Tooltip } from 'antd';
+import { DeleteOutlined, SettingOutlined, UserOutlined, RobotOutlined } from '@ant-design/icons';
 import { useConversation } from '../hooks/useConversation';
 import { Message } from '../hooks/useConversation';
 
@@ -12,6 +12,46 @@ export const MessageList = ({ chatId }: MessageListProps) => {
     const { messages, loading, clearMessages } = useConversation(chatId);
     const [isHistorySettingOpen, setIsHistorySettingOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    // Add state for avatars
+    const [userAvatar, setUserAvatar] = useState<string | null>(null);
+    const [aiAvatar, setAiAvatar] = useState<string | null>(null);
+    const [avatarsLoaded, setAvatarsLoaded] = useState<boolean>(false);
+
+    // Load user avatar
+    useEffect(() => {
+        // In a real app, you would fetch this from user profile
+        // For now, we'll use a placeholder avatar
+        const loadUserAvatar = async () => {
+            try {
+                // You can replace this with an actual API call to get the user's avatar
+                // const response = await fetch('/api/user/profile');
+                // const data = await response.json();
+                // setUserAvatar(data.avatarUrl);
+                
+                // For demo purposes, using a placeholder
+                setUserAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=user123');
+            } catch (error) {
+                console.error('Failed to load user avatar:', error);
+                // Use null to trigger the fallback icon
+                setUserAvatar(null);
+            }
+        };
+        
+        // Load AI avatar
+        const loadAiAvatar = async () => {
+            try {
+                // For demo purposes, using a placeholder
+                setAiAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=ai456');
+            } catch (error) {
+                console.error('Failed to load AI avatar:', error);
+                // Use null to trigger the fallback icon
+                setAiAvatar(null);
+            }
+        };
+        
+        Promise.all([loadUserAvatar(), loadAiAvatar()])
+            .finally(() => setAvatarsLoaded(true));
+    }, []);
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -106,20 +146,58 @@ export const MessageList = ({ chatId }: MessageListProps) => {
         return (
             <div 
                 key={message.id} 
-                className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
+                className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'} items-start`}
             >
+                {/* Avatar for assistant (only show on left side) */}
+                {!isUser && (
+                    <Tooltip title="AI Assistant">
+                        <Avatar 
+                            icon={<RobotOutlined />} 
+                            style={{ 
+                                backgroundColor: aiAvatar ? 'transparent' : '#1890ff',
+                                marginRight: '8px',
+                                flexShrink: 0,
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                            }}
+                            size={40}
+                            src={aiAvatar} // Use AI avatar if available
+                        />
+                    </Tooltip>
+                )}
+                
                 <div 
                     className={`max-w-3/4 p-3 rounded-lg ${
                         isUser 
                             ? 'bg-blue-500 text-white rounded-tr-none' 
                             : 'bg-gray-100 text-gray-800 rounded-tl-none'
                     }`}
+                    style={{
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+                        maxWidth: '70%' // Limit message width
+                    }}
                 >
                     {formatMessageContent(message.content)}
                     <div className="text-xs mt-1 text-right opacity-70">
                         {new Date(message.timestamp).toLocaleTimeString()}
                     </div>
                 </div>
+                
+                {/* Avatar for user (only show on right side) */}
+                {isUser && (
+                    <Tooltip title="You">
+                        <Avatar 
+                            icon={<UserOutlined />} 
+                            style={{ 
+                                backgroundColor: userAvatar ? 'transparent' : '#52c41a',
+                                marginLeft: '8px',
+                                flexShrink: 0,
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                            }}
+                            size={40}
+                            src={userAvatar} // Use user's avatar if available
+                        />
+                    </Tooltip>
+                )}
             </div>
         );
     };

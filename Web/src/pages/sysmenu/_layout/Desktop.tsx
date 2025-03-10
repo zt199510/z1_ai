@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -9,13 +9,14 @@ import {
   QuestionCircleOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons';
-import { Menu, Button, Tooltip } from 'antd';
+import { Menu, Button, Tooltip, Avatar } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarUserInfo } from '../../Users/UserInfo';
 import type { MenuProps } from 'antd';
 import InPageCollapsed from '@/components/ui/InPageCollapsed';
 import ChatListSection from '@/components/ui/ChatListSection';
 import { useTranslation } from '@/utils/translation';
+import { useChatStore } from '@/stores/chatStore';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -38,7 +39,6 @@ const DesktopSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
   // Add these states and functions for the ChatListSection
   const [chatListStatus, setChatListStatus] = useState<string>('done');
   const [chatList, setChatList] = useState<any[]>([]);
@@ -46,7 +46,10 @@ const DesktopSidebar: React.FC = () => {
   const [highlightedChat, setHighlightedChat] = useState<string>('');
   const [newChatName, setNewChatName] = useState<string>('');
   const [renameChatId, setRenameChatId] = useState<string>('');
-
+  const { 
+    sessions,
+    loadSessions 
+  } = useChatStore();
   const handleOpenChange = (isOpen: boolean, chatId: string) => {
     if (isOpen) {
       setHighlightedChat(chatId);
@@ -136,7 +139,16 @@ const DesktopSidebar: React.FC = () => {
     return ['/'];
   };
 
+  useEffect(() => {
+    setChatListStatus('loading');
+    loadSessions('');
+    console.log('loadSessions');
+    setChatListStatus('done');
+  }, []);
+
+
   return (
+    
     <div className={`h-full flex flex-col bg-white border-r border-gray-200 transition-all duration-300 overflow-x-hidden ${collapsed ? 'w-20' : 'w-64'}`}>
       <div className="p-4 flex items-center justify-between">
         {!collapsed && (
@@ -169,7 +181,7 @@ const DesktopSidebar: React.FC = () => {
             <ChatListSection
               t={t}
               chatListStatus={chatListStatus}
-              chatList={chatList}
+              chatList={sessions}
               currentChatId={currentChatId}
               pathname={location.pathname}
               highlightedChat={highlightedChat}

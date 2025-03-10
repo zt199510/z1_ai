@@ -81,7 +81,7 @@ export default function About() {
     ];
 
     return (
-        <Layout style={{ background: '#fff' }}>
+        <Layout style={{ background: '#fff', minHeight: '100%' }}>
             {/* <Flexbox align="flex-start" padding={24}>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
