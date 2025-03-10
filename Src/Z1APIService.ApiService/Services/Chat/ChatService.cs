@@ -116,9 +116,9 @@ public sealed class ChatService(
             // 获取当前会话模型属于的模型
             var model = await dbContext.Models
                 .AsNoTracking()
-                .Where(x => x.Id == session.Model)
+                .Where(x => x.ModelId == session.Model)
                 .FirstOrDefaultAsync();
-
+            var allModels = await dbContext.Models.ToListAsync();
             var kernel = KernelFactory.CreateKernel(model.ModelId, "http://abc.ztgametv.cn:10086/v1", "sk-uxaC405uujdT3CSS828dC75fF89b49B09dFa9a76B13667E3", "openai");
             var history = new ChatHistory();
 

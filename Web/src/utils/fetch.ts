@@ -134,54 +134,79 @@ export const del = (url: string, options?: any) => {
   });
 };
 
+/**
+ * 使用Server-Sent Events (SSE)技术从服务器获取流式响应的异步生成器函数
+ * 
+ * 该函数建立与服务器的连接，并以流的形式接收数据，每当接收到新的数据块时，
+ * 会将其解析并通过yield返回给调用者，实现实时数据处理。
+ * 
+ * @param {string} url - API端点URL
+ * @param {any} data - 要发送的请求数据
+ * @returns {AsyncIterableIterator<any>} 一个异步迭代器，每次迭代产生服务器返回的一个解析后的数据块
+ */
 export async function* fetchSSE(url: string, data: any): AsyncIterableIterator<any> {
+  // 从本地存储获取认证令牌
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
 
+  // 发送POST请求到服务器
   const response = await window.fetch(url, {
     headers,
     method: "POST",
     body: JSON.stringify(data),
   });
 
+  // 检查响应状态
   if (!response.ok) {
     const errorText = await response.text();
     const json = JSON.parse(errorText);
     if (!json.success) {
+      // 显示错误消息
       message.error(json.message, 5);
     }
     throw new Error(json);
   }
 
+  // 获取响应体的读取器和文本解码器
   const reader = response.body!.getReader();
   const decoder = new TextDecoder("utf-8");
 
   try {
+    // 持续读取数据流
     while (true) {
+      // 读取一个数据块
       const { done, value } = await reader.read();
+      // 如果数据流结束，退出循环
       if (done) break;
 
+      // 解码二进制数据为文本
       const chunk = decoder.decode(value, { stream: true });
+      // 按SSE协议分割事件（每个事件由两个换行符分隔）
       const events = chunk.split("\n\n");
 
+      // 处理每个事件
       for (const event of events) {
         if (event.trim()) {
+          // 查找以"data:"开头的行
           const dataLine = event.split("\n").find(line => line.startsWith("data:"));
           if (dataLine) {
+            // 提取JSON数据
             const jsonData = dataLine.replace("data:", "").trim();
-            // 判断是[done]
+            // 检查是否是结束标记
             if (jsonData === "[done]") {
               break;
             }
+            // 解析JSON并返回给调用者
             yield JSON.parse(jsonData);
           }
         }
       }
     }
   } finally {
+    // 确保在任何情况下都取消读取器
     reader.cancel();
   }
 }

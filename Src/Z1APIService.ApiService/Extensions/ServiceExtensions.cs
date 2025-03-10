@@ -126,7 +126,8 @@ public static class ServiceExtensions
             var env = provider.GetRequiredService<IWebHostEnvironment>();
             var chatOptions = provider.GetRequiredService<IOptions<ChatOptions>>().Value;
 
-            return new DocumentToMarkdown(chatOptions, Path.Combine(env.WebRootPath, "images"));
+            var webRootPath = env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            return new DocumentToMarkdown(chatOptions, Path.Combine(webRootPath, "images"));
         }));
 
         return services;

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Tooltip, Modal } from 'antd';
-import { SendOutlined, FileImageOutlined, CodeOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Modal, Spin } from 'antd';
+import { SendOutlined, FileImageOutlined, CodeOutlined, LoadingOutlined } from '@ant-design/icons';
 import { fileToBase64 } from '@/utils/utils';
 
 interface MessageInputProps {
@@ -8,6 +8,7 @@ interface MessageInputProps {
     maxRows?: number;
     lineHeight?: number;
     onHeightChange?: (height: number) => void;
+    generateLoading?: boolean;
 }
 
 const MessageInput = (props: MessageInputProps) => {
@@ -15,7 +16,8 @@ const MessageInput = (props: MessageInputProps) => {
         submit,
         maxRows = 4,
         lineHeight = 24,
-        onHeightChange
+        onHeightChange,
+        generateLoading = false
     } = props;
 
     const [text, setText] = useState('');
@@ -77,14 +79,14 @@ const MessageInput = (props: MessageInputProps) => {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey && !submitBtnDisable && !pending) {
+        if (e.key === 'Enter' && !e.shiftKey && !submitBtnDisable && !pending && !generateLoading) {
             e.preventDefault();
             handleSubmit();
         }
     };
 
     const handleSubmit = async () => {
-        if (submitBtnDisable || pending) return;
+        if (submitBtnDisable || pending || generateLoading) return;
 
         setPending(true);
         try {
@@ -165,6 +167,16 @@ const MessageInput = (props: MessageInputProps) => {
 
     return (
         <div className="relative border rounded-lg p-3 pt-2 pb-3 bg-white">
+            {/* Loading overlay when AI is generating */}
+            {generateLoading && (
+                <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-20 rounded-lg">
+                    <div className="flex flex-col items-center">
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+                        <span className="mt-2 text-gray-600">AI正在思考中...</span>
+                    </div>
+                </div>
+            )}
+            
             {/* Image previews */}
             {uploadedImages.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -178,6 +190,7 @@ const MessageInput = (props: MessageInputProps) => {
                             <button
                                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
                                 onClick={() => removeImage(index)}
+                                disabled={generateLoading}
                             >
                                 ×
                             </button>
@@ -193,21 +206,23 @@ const MessageInput = (props: MessageInputProps) => {
                     value={text}
                     onChange={handleTextChange}
                     onKeyDown={handleKeyDown}
-                    placeholder="输入消息..."
-                    className="w-full resize-none outline-none border-none p-2"
+                    placeholder={generateLoading ? "AI正在思考中..." : "输入消息..."}
+                    className={`w-full resize-none outline-none border-none p-2 ${generateLoading ? 'text-gray-400' : ''}`}
                     style={{ height: `${textareaHeight}px` }}
+                    disabled={generateLoading}
                 />
                 
                 <div className="flex items-center">
                     {/* Code button */}
-                    <Tooltip title="插入代码">
+                    {/* <Tooltip title="插入代码">
                         <Button
                             type="text"
                             icon={<CodeOutlined />}
                             onClick={showCodeModal}
                             className="mr-1"
+                            disabled={generateLoading}
                         />
-                    </Tooltip>
+                    </Tooltip> */}
                     
                     {/* Image upload button */}
                     <input
@@ -217,6 +232,7 @@ const MessageInput = (props: MessageInputProps) => {
                         accept="image/*"
                         multiple
                         className="hidden"
+                        disabled={generateLoading}
                     />
                     <Tooltip title="上传图片">
                         <Button
@@ -224,17 +240,18 @@ const MessageInput = (props: MessageInputProps) => {
                             icon={<FileImageOutlined />}
                             onClick={() => fileInputRef.current?.click()}
                             className="mr-1"
+                            disabled={generateLoading}
                         />
                     </Tooltip>
                     
                     {/* Send button */}
-                    <Tooltip title="发送消息">
+                    <Tooltip title={generateLoading ? "AI正在思考中" : "发送消息"}>
                         <Button
                             type="primary"
                             shape="circle"
                             icon={<SendOutlined />}
                             onClick={handleSubmit}
-                            disabled={submitBtnDisable}
+                            disabled={submitBtnDisable || generateLoading}
                             loading={pending}
                         />
                     </Tooltip>
@@ -242,7 +259,7 @@ const MessageInput = (props: MessageInputProps) => {
             </div>
 
             {/* Code Modal */}
-            <Modal
+            {/* <Modal
                 title="插入代码块"
                 open={isCodeModalVisible}
                 onOk={insertCodeBlock}
@@ -294,7 +311,7 @@ const MessageInput = (props: MessageInputProps) => {
                         placeholder="在此输入代码..."
                     />
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     );
 };

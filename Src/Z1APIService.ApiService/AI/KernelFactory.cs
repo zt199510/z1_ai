@@ -9,6 +9,7 @@ public class KernelFactory
     private static readonly ConcurrentDictionary<string, Lazy<Kernel>> Kernels = new();
     public static Kernel CreateKernel(string model, string endpoint, string? apiKey, string provider)
     {
+
         var key = model + endpoint + apiKey + provider;
         return Kernels.GetOrAdd(key, ValueFactory).Value;
         Lazy<Kernel> ValueFactory(string key)

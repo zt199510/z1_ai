@@ -3,7 +3,7 @@ import { Alert } from 'antd';
 import ConversationHeader from '../components/ConversationHeader';
 import { MessageList } from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
-import { useConversation } from '../hooks/useConversation';
+
 import { useParams } from 'react-router-dom';
 
 export default function Mobile() {
@@ -27,8 +27,7 @@ export default function Mobile() {
         }
     }, [params.id]);
 
-    // 使用useConversation hook获取sendMessage方法
-    const { sendMessage } = useConversation(chatId);
+ 
 
     // 处理消息发送
     const handleSendMessage = async (text: string, attachments?: Array<{ mimeType: string; data: string }>) => {
@@ -39,8 +38,7 @@ export default function Mobile() {
         
         console.log('Sending message:', text, attachments);
         
-        // 发送文本消息
-        await sendMessage(text);
+  
         
         // 如果有附件，可以在这里处理
         if (attachments && attachments.length > 0) {

@@ -4,11 +4,14 @@ import GreetingHeader from '../components/GreetingHeader';
 import ChatHeader from '../components/ChatHeader';
 import AdaptiveTextarea from '../components/AdaptiveTextarea';
 import { useChatStore } from '@/stores/chatStore';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Desktop() {
     const [showGuideAlert, setShowGuideAlert] = useState(false);
     const [greetingText, setGreetingText] = useState('');
     const { createSession } = useChatStore();
+    const navigate = useNavigate();
     
     useEffect(() => {
         function getGreeting(): string {
@@ -28,11 +31,12 @@ export default function Desktop() {
 
     const newChat = async (text: string, attachments?: Array<{ mimeType: string; data: string }>) => {
         const session = await createSession({
-            modelId: 'gpt-4o',
+            modelId: 'gpt-4o-mini',
             value: text,
             files: attachments || []
         });
         console.log('Created session:', session);
+        navigate(`/conversations/${session}`);
     };
 
     return (
