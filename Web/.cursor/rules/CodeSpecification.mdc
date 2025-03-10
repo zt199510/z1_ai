@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 description: 代码规范指南，适用于项目中的TypeScript和React代码
 globs: *.ts,*.tsx

@@ -37,7 +37,7 @@ export default function Desktop() {
 
     return (
         <>
-            <ChatHeader />
+            {/* <ChatHeader /> */}
             {showGuideAlert &&
                 <div className='m-6'>
                     <Alert message={'12312'}

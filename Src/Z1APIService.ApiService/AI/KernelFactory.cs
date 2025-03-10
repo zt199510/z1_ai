@@ -42,7 +42,6 @@ public class KernelFactory
                         kernelBuilder.AddOpenAIChatCompletion(model, new Uri(endpoint), apiKey, "z1-Chat");
                         break;
                 }
-
                 return kernelBuilder.Build();
             });
         }

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  MenuFoldOutlined, 
-  MenuUnfoldOutlined, 
-  HomeOutlined, 
-  UserOutlined, 
-  SettingOutlined, 
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  HomeOutlined,
+  UserOutlined,
+  SettingOutlined,
   MessageOutlined,
   QuestionCircleOutlined,
   InfoCircleOutlined
@@ -13,6 +13,9 @@ import { Menu, Button, Tooltip } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarUserInfo } from '../../Users/UserInfo';
 import type { MenuProps } from 'antd';
+import InPageCollapsed from '@/components/ui/InPageCollapsed';
+import ChatListSection from '@/components/ui/ChatListSection';
+import { useTranslation } from '@/utils/translation';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -34,7 +37,67 @@ const DesktopSidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
-  
+  const { t } = useTranslation();
+
+  // Add these states and functions for the ChatListSection
+  const [chatListStatus, setChatListStatus] = useState<string>('done');
+  const [chatList, setChatList] = useState<any[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string>('');
+  const [highlightedChat, setHighlightedChat] = useState<string>('');
+  const [newChatName, setNewChatName] = useState<string>('');
+  const [renameChatId, setRenameChatId] = useState<string>('');
+
+  const handleOpenChange = (isOpen: boolean, chatId: string) => {
+    if (isOpen) {
+      setHighlightedChat(chatId);
+    } else {
+      setHighlightedChat('');
+    }
+  };
+
+  const deleteChat = (chatId: string) => {
+    // Implement delete chat functionality
+    console.log('Delete chat:', chatId);
+  };
+
+  const showEditModal = () => {
+    // Implement show edit modal functionality
+    console.log('Show edit modal');
+  };
+
+  const toggleStar = (chatId: string, isStar: boolean) => {
+    // Implement toggle star functionality
+    console.log('Toggle star:', chatId, isStar);
+  };
+
+  const getItems = (isStar: boolean) => {
+    return [
+      {
+        key: 'edit',
+        label: t('rename'),
+      },
+      {
+        key: 'delete',
+        label: t('delete'),
+        danger: true,
+      },
+    ];
+  };
+
+  const getBotActionItems = (isStar: boolean) => {
+    return [
+      {
+        key: 'top',
+        label: isStar ? t('unpin') : t('pin'),
+      },
+      {
+        key: 'delete',
+        label: t('delete'),
+        danger: true,
+      },
+    ];
+  };
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
@@ -77,7 +140,7 @@ const DesktopSidebar: React.FC = () => {
     <div className={`h-full flex flex-col bg-white border-r border-gray-200 transition-all duration-300 overflow-x-hidden ${collapsed ? 'w-20' : 'w-64'}`}>
       <div className="p-4 flex items-center justify-between">
         {!collapsed && (
-          <div className="text-xl font-bold text-gray-800">系统管理</div>
+          <div className="text-xl font-bold text-gray-800">Z1</div>
         )}
         <Button
           type="text"
@@ -86,7 +149,7 @@ const DesktopSidebar: React.FC = () => {
           className={collapsed ? 'mx-auto' : ''}
         />
       </div>
-      
+
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
         <Menu
           mode="inline"
@@ -96,13 +159,38 @@ const DesktopSidebar: React.FC = () => {
           items={items}
           className="border-r-0"
         />
+        {!collapsed && (
+          <div className="w-full">
+            <InPageCollapsed />
+            <div className='w-full flex flex-row justify-between items-center border-b border-gray-200 mb-6' />
+
+
+            {/* Add the ChatListSection component here */}
+            <ChatListSection
+              t={t}
+              chatListStatus={chatListStatus}
+              chatList={chatList}
+              currentChatId={currentChatId}
+              pathname={location.pathname}
+              highlightedChat={highlightedChat}
+              handleOpenChange={handleOpenChange}
+              deleteChat={deleteChat}
+              setNewChatName={setNewChatName}
+              setRenameChatId={setRenameChatId}
+              showEditModal={showEditModal}
+              toggleStar={toggleStar}
+              getItems={getItems}
+              getBotActionItems={getBotActionItems}
+            />
+          </div>
+        )}
       </div>
-      
+
       {/* 底部用户信息 */}
       <div className={`border-t border-gray-200 overflow-hidden ${collapsed ? 'p-2' : ''}`}>
         {collapsed ? (
           <Tooltip title="查看个人资料" placement="right">
-            <div 
+            <div
               className="flex justify-center py-3 cursor-pointer"
               onClick={() => navigate('/users/profile')}
             >
@@ -113,7 +201,7 @@ const DesktopSidebar: React.FC = () => {
           <SidebarUserInfo />
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
