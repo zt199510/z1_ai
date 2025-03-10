@@ -12,7 +12,7 @@ interface ConversationHeaderProps {
 }
 
 const ConversationHeader = ({ chatId, showGuideAlert = false, onGuideAlertClose }: ConversationHeaderProps) => {
-    const { isSidebarCollapsed, toggleSidebar } = useAppStore();
+
     const [isHistorySettingOpen, setIsHistorySettingOpen] = useState(false);
     const { setMessages } = useChatStore();
 
@@ -50,15 +50,10 @@ const ConversationHeader = ({ chatId, showGuideAlert = false, onGuideAlertClose 
 
     return (
         <div className="flex flex-col">
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between p-4 border-b border-gray-300 border-opacity-50">
                 <div className="flex items-center">
-                    <Button
-                        type="text"
-                        icon={<ToggleSidebar />}
-                        onClick={toggleSidebar}
-                        className="mr-4"
-                    />
-                    <h1 className="text-lg font-medium">对话详情</h1>
+
+
                 </div>
                 <div className="flex items-center">
                     <Tooltip title="设置">
@@ -88,7 +83,7 @@ const ConversationHeader = ({ chatId, showGuideAlert = false, onGuideAlertClose 
                     </Tooltip>
                 </div>
             </div>
-            
+
             {showGuideAlert && (
                 <div className='mx-6 mb-2'>
                     <Alert

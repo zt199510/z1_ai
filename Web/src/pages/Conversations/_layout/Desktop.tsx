@@ -7,7 +7,7 @@ import { useChatStore } from '@/stores/chatStore';
 import { getMessages } from '@/apis/Message';
 
 export default function Desktop() {
-    const [showGuideAlert, setShowGuideAlert] = useState(true);
+    const [showGuideAlert, setShowGuideAlert] = useState(false);
     const [chatId, setChatId] = useState<string>('');
     const params = useParams();
     // Add state for input container height
