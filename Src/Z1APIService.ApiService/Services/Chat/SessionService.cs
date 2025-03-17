@@ -96,9 +96,6 @@ public class SessionService(
         return session;
     }
 
-    /// <summary>
-    /// 删除会话
-    /// </summary>
 
     /// <summary>
     /// 删除会话
