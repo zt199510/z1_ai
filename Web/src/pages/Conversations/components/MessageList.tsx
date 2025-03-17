@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Spin, Avatar, Tooltip, Typography } from 'antd';
+import { Spin, Avatar, Tooltip, Typography, Flex } from 'antd';
 import { UserOutlined, RobotOutlined } from '@ant-design/icons';
 import { useChatStore } from '@/stores/chatStore';
+import { Bubble, type BubbleProps } from '@ant-design/x';
+import markdownit from 'markdown-it';
 
 interface MessageListProps {
     chatId: string;
@@ -13,6 +15,13 @@ export const MessageList = ({ chatId }: MessageListProps) => {
     const [aiAvatar, setAiAvatar] = useState<string | null>(null);
     const [avatarsLoaded, setAvatarsLoaded] = useState<boolean>(false);
     const { messages, generateLoading } = useChatStore();
+    const md = markdownit({ html: true, breaks: true });
+
+    const renderMarkdown: BubbleProps['messageRender'] = (content) => (
+        <Typography>
+            <div dangerouslySetInnerHTML={{ __html: md.render(content || '') }} />
+        </Typography>
+    );
 
     // Load user avatar
     useEffect(() => {
@@ -47,116 +56,46 @@ export const MessageList = ({ chatId }: MessageListProps) => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 处理消息内容，将代码块转换为HTML
-    const formatMessageContent = (content: string) => {
-        if (content.includes('```')) {
-            const parts = [];
-            let currentIndex = 0;
-            const codeBlockRegex = /```(\w*)\n([\s\S]*?)\n```/g;
-            let match;
-
-            while ((match = codeBlockRegex.exec(content)) !== null) {
-                if (match.index > currentIndex) {
-                    parts.push(
-                        <Typography.Paragraph key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
-                            {content.substring(currentIndex, match.index)}
-                        </Typography.Paragraph>
-                    );
-                }
-
-                const language = match[1] || 'plaintext';
-                const code = match[2];
-                parts.push(
-                    <div key={`code-${match.index}`} className="my-2 rounded-md overflow-hidden">
-                        <div className="bg-gray-800 text-white text-xs px-3 py-1">
-                            {language}
-                        </div>
-                        <pre className="bg-gray-900 text-gray-100 p-3 overflow-x-auto">
-                            <code>{code}</code>
-                        </pre>
-                    </div>
-                );
-
-                currentIndex = match.index + match[0].length;
-            }
-
-            if (currentIndex < content.length) {
-                parts.push(
-                    <Typography.Paragraph key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
-                        {content.substring(currentIndex)}
-                    </Typography.Paragraph>
-                );
-            }
-
-            return <>{parts}</>;
-        }
-
-        return <Typography.Paragraph className="whitespace-pre-wrap break-words">{content}</Typography.Paragraph>;
-    };
-
     const renderMessage = (message: any) => {
         const isUser = message.role === 'user';
+        const bubbleProps: BubbleProps = {
+            content: message.texts[0].text,
+            placement: isUser ? 'end' : 'start',
+            avatar: isUser ? (
+                <Avatar
+                    icon={<UserOutlined />}
+                    style={{
+                        backgroundColor: userAvatar ? 'transparent' : '#52c41a',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}
+                    size={40}
+                    src={userAvatar}
+                />
+            ) : (
+                <Avatar
+                    icon={<RobotOutlined />}
+                    style={{
+                        backgroundColor: aiAvatar ? 'transparent' : '#1890ff',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}
+                    size={40}
+                    src={aiAvatar}
+                />
+            ),
+            variant: isUser ? 'filled' : 'outlined',
+            shape: 'round',
+            messageRender: renderMarkdown,
+            styles: {
+                content: {
+                    maxWidth: '70%',
+                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+                }
+            }
+        };
 
         return (
-            <div
-                key={message.id}
-                className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'} items-start`}
-            >
-                {!isUser && (
-                    <Tooltip title="AI Assistant">
-                        <Avatar
-                            icon={<RobotOutlined />}
-                            style={{
-                                backgroundColor: aiAvatar ? 'transparent' : '#1890ff',
-                                marginRight: '8px',
-                                flexShrink: 0,
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                            }}
-                            size={40}
-                            src={aiAvatar}
-                        />
-                    </Tooltip>
-                )}
-
-                <div
-                    className={`max-w-3/4 p-3 rounded-lg ${
-                        isUser
-                            ? 'bg-blue-500 text-white rounded-tr-none'
-                            : 'bg-gray-100 text-gray-800 rounded-tl-none'
-                    }`}
-                    style={{
-                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-                        maxWidth: '70%',
-                        position: 'relative'
-                    }}
-                >
-                    {formatMessageContent(message.texts[0].text)}
-                    <div 
-                        className={`absolute top-0 ${
-                            isUser ? 'right-0' : 'left-0'
-                        } w-3 h-3 transform ${
-                            isUser ? 'translate-x-1/2' : '-translate-x-1/2'
-                        } -translate-y-1/2 ${
-                            isUser ? 'bg-blue-500' : 'bg-gray-100'
-                        } rotate-45`}
-                    />
-                </div>
-
-                {isUser && (
-                    <Tooltip title="You">
-                        <Avatar
-                            icon={<UserOutlined />}
-                            style={{
-                                backgroundColor: userAvatar ? 'transparent' : '#52c41a',
-                                marginLeft: '8px',
-                                flexShrink: 0,
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                            }}
-                            size={40}
-                            src={userAvatar}
-                        />
-                    </Tooltip>
-                )}
+            <div key={message.id} className="mb-4">
+                <Bubble {...bubbleProps} />
             </div>
         );
     };
@@ -174,8 +113,10 @@ export const MessageList = ({ chatId }: MessageListProps) => {
                     </div>
                 ) : (
                     <>
-                        {messages.map(renderMessage)}
-                        <div ref={messagesEndRef} />
+                        <Flex gap="middle" vertical>
+                            {messages.map(renderMessage)}
+                            <div ref={messagesEndRef} />
+                        </Flex>
                     </>
                 )}
             </div>
