@@ -99,6 +99,10 @@ public class SessionService(
     /// <summary>
     /// 删除会话
     /// </summary>
+
+    /// <summary>
+    /// 删除会话
+    /// </summary>
     [EndpointSummary("删除会话")]
     public async Task DeleteAsync(long id)
     {
@@ -107,8 +111,30 @@ public class SessionService(
             .ExecuteDeleteAsync();
 
         // 删除会话的同时删除会话的所有消息
-        await dbContext.Messages
+        var messagesToDelete = await dbContext.Messages
             .Where(m => m.SessionId == id)
-            .ExecuteDeleteAsync();
+            .ToListAsync();
+
+        foreach (var message in messagesToDelete)
+        {
+            var messageTextsToDelete = await dbContext.MessageTexts
+                .Where(mt => mt.MessageId == message.Id)
+                .ToListAsync();
+            dbContext.MessageTexts.RemoveRange(messageTextsToDelete);
+
+            var messageFilesToDelete = await dbContext.MessageFiles
+                .Where(mf => mf.MessageId == message.Id)
+                .ToListAsync();
+            dbContext.MessageFiles.RemoveRange(messageFilesToDelete);
+
+            var messageModelUsagesToDelete = await dbContext.MessageModelUsages
+                .Where(mmu => mmu.MessageId == message.Id)
+                .ToListAsync();
+            dbContext.MessageModelUsages.RemoveRange(messageModelUsagesToDelete);
+        }
+
+        dbContext.Messages.RemoveRange(messagesToDelete);
+
+        await dbContext.SaveChangesAsync();
     }
 }

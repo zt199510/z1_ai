@@ -279,4 +279,81 @@ public sealed class ChatService(
             
         }
     }
+
+
+    /// <summary>
+    /// 生成会话名称
+    /// </summary>
+    /// <param name="sessionId"></param>
+    /// <returns></returns>
+    [EndpointSummary("生成会话名称")]
+    [Filter(typeof(ResultFilter))]
+    [Authorize]
+    public async Task<string> GenerateSessionNameAsync(long sessionId)
+    {
+        var session = await dbContext.Sessions
+            .AsNoTracking()
+            .Where(x => x.Id == sessionId)
+            .FirstOrDefaultAsync();
+
+        if (session == null)
+        {
+            throw new BusinessException("会话不存在");
+        }
+
+        if (string.IsNullOrEmpty(session.Model))
+        {
+            session.Model = chatSessionOption.Value.RenameModel;
+        }
+
+        // 获取当前会话模型属于的模型
+        var model = await dbContext.Models
+            .AsNoTracking()
+            .Where(x => x.ModelId == session.Model)
+            .FirstOrDefaultAsync();
+
+
+
+
+        // 读取这个会话的最新的俩条消息
+        var messages = (await dbContext.Messages
+            .Where(x => x.SessionId == sessionId)
+            .OrderByDescending(x => x.CreatedAt)
+            .Take(2)
+            .Include(x => x.Texts)
+            .ToListAsync());
+
+        if (messages.Count == 0)
+        {
+            throw new BusinessException("会话不存在消息");
+        }
+
+        messages.Reverse();
+
+        var sb = new StringBuilder();
+
+        foreach (var message in messages)
+        {
+            if (message.Texts.Count != 0)
+            {
+                var text = message.Texts.LastOrDefault();
+
+                sb.AppendLine(message.Role + "：" + text.Text);
+            }
+        }
+        var kernel = KernelFactory.CreateKernel(model.ModelId, "http://abc.ztgametv.cn:10086/v1", "sk-uxaC405uujdT3CSS828dC75fF89b49B09dFa9a76B13667E3", "openai");
+      
+        var chatPlugin = kernel.Plugins["Chat"];
+
+        var result = await kernel.InvokeAsync(chatPlugin["TopicNaming"], new KernelArguments()
+        {
+            ["content"] = sb.ToString(),
+        });
+
+        await dbContext.Sessions.Where(x => x.Id == sessionId)
+            .ExecuteUpdateAsync(x => x.SetProperty(a => a.Name, x => result.ToString()));
+
+        return result.ToString();
+    }
+
 }

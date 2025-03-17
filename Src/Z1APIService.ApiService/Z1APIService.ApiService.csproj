@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="plugins\Chat\TopicNaming\skprompt.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="plugins\Chat\TopicNaming\skprompt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EntityFramework\EntityFramework.Sqlite\EntityFramework.Sqlite.csproj" />
     <ProjectReference Include="..\Storages\Storage.LiteDB\Storage.LiteDB.csproj" />
     <ProjectReference Include="..\Z1.Core\Z1.Core.csproj" />
@@ -41,6 +51,12 @@
   <ItemGroup>
     <Folder Include="Services\Auth\Dto\" />
     <Folder Include="Services\FileStorage\Param\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="plugins\Chat\TopicNaming\config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

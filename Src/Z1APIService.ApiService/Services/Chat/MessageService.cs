@@ -8,7 +8,6 @@ using Z1APIService.ApiService.Infrastructure;
 using Z1APIService.ApiService.Services.Chat.Dto;
 using Microsoft.EntityFrameworkCore;
 using Z1APIService.ApiService.Services.Chat.Param;
-
 namespace Z1APIService.ApiService.Services.Chat;
 
 [Tags("Chat")]
@@ -16,6 +15,7 @@ namespace Z1APIService.ApiService.Services.Chat;
 [Filter(typeof(ResultFilter))]
 public class MessageService(IDbContext dbContext, IUserContext userContext, IMapper mapper) : FastApi
 {
+
     /// <summary>
     /// 获取所有消息
     /// </summary>

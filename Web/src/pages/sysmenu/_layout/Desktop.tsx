@@ -60,15 +60,15 @@ const DesktopSidebar: React.FC = () => {
   };
 
   const deleteChat = async (chatId: string) => {
-
     try {
       // Show confirmation dialog before deleting
       const confirmed = await new Promise<boolean>((resolve) => {
         Modal.confirm({
-          title: t('confirm_delete'),
-          content: t('confirm_delete_message'),
-          okText: t('yes'),
-          cancelText: t('no'),
+          title: '确认删除会话',
+          content: '您确定要删除这个会话吗？删除后将无法恢复。',
+          okText: '确定删除',
+          cancelText: '取消',
+          okButtonProps: { danger: true },
           onOk: () => resolve(true),
           onCancel: () => resolve(false),
         });
@@ -77,18 +77,16 @@ const DesktopSidebar: React.FC = () => {
       if (confirmed) {
         const result = await deleteSession(Number(chatId));
         if (result.success) {
-          message.success(t('delete_success'));
+          message.success('会话已成功删除');
           loadSessions('');
         } else {
-          message.error(t('delete_failed'));
+          message.error('删除会话失败，请重试');
         }
       }
     } catch (error) {
       console.error('Error deleting chat:', error);
-      message.error(t('operation_failed'));
+      message.error('操作失败，请稍后重试');
     }
-    // Implement delete chat functionality
-    console.log('Delete chat:', chatId);
   };
 
   const showEditModal = () => {

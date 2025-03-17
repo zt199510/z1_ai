@@ -133,7 +133,8 @@ export const useSessionManager: StateCreator<
 
         const messageResponse = await createMessage(userMessage);
         userMessage.id = messageResponse.data.id;
-        set({ messages: [...get().messages, userMessage], value: '', files: [], generateLoading: true });
+        const previousMessages = get().messages;
+        set({ messages: [...previousMessages, userMessage], value: '', files: [], generateLoading: true });
         const tempAiMessage = {
             sessionId: param.sessionId,
             role: ChatRole.Assistant,
@@ -192,8 +193,13 @@ export const useSessionManager: StateCreator<
         }
 
         set({ messages: [...get().messages], generateLoading: false });
-
-        await get().renameSession(param.sessionId);
+        console.log('Previous messages length:', previousMessages.length);
+        
+        // 如果这是第一轮对话（之前没有消息），则重命名会话
+        if (previousMessages.length === 0) {
+            console.log('First conversation, renaming session...');
+            await get().renameSession(param.sessionId);
+        }
     },
     /**
      * 发送聊天消息并获取回复
@@ -213,6 +219,7 @@ export const useSessionManager: StateCreator<
     chatComplete: async (param: ChatCompleteInput) => {
         // 获取会话ID，如果没有提供则使用当前会话ID
         const sessionId = param.sessionId ?? get().currentSession?.id;
+        const previousMessages = get().messages;
 
         // 1. 创建用户消息对象
         const userMessage = {
@@ -256,7 +263,7 @@ export const useSessionManager: StateCreator<
         tempAiMessage.texts[0].id = messageResponse.data.id;
 
         // 3. 更新UI状态，添加用户消息和临时AI消息
-        const updatedMessages = [...get().messages, userMessage, tempAiMessage];
+        const updatedMessages = [...previousMessages, userMessage, tempAiMessage];
         set({
             messages: updatedMessages,
             generateLoading: true // 设置加载状态
@@ -327,8 +334,15 @@ export const useSessionManager: StateCreator<
                 generateLoading: false
             });
 
+            // 8. 如果这是第一轮对话，重命名会话
+            console.log('Previous messages length:', previousMessages.length);
+            if (previousMessages.length === 0) {
+                console.log('First conversation in chatComplete, renaming session...');
+                await get().renameSession(sessionId);
+            }
+
         } catch (error) {
-            // 8. 错误处理
+            // 错误处理
             console.error('Error in chatComplete:', error);
             // 关闭加载状态，即使发生错误
             set({ generateLoading: false });
