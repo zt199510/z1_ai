@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Spin, Avatar, Tooltip } from 'antd';
+import { Spin, Avatar, Tooltip, Typography } from 'antd';
 import { UserOutlined, RobotOutlined } from '@ant-design/icons';
 import { useChatStore } from '@/stores/chatStore';
+
 interface MessageListProps {
     chatId: string;
 }
@@ -15,32 +16,20 @@ export const MessageList = ({ chatId }: MessageListProps) => {
 
     // Load user avatar
     useEffect(() => {
-        // In a real app, you would fetch this from user profile
-        // For now, we'll use a placeholder avatar
         const loadUserAvatar = async () => {
             try {
-                // You can replace this with an actual API call to get the user's avatar
-                // const response = await fetch('/api/user/profile');
-                // const data = await response.json();
-                // setUserAvatar(data.avatarUrl);
-
-                // For demo purposes, using a placeholder
                 setUserAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=user123');
             } catch (error) {
                 console.error('Failed to load user avatar:', error);
-                // Use null to trigger the fallback icon
                 setUserAvatar(null);
             }
         };
 
-        // Load AI avatar
         const loadAiAvatar = async () => {
             try {
-                // For demo purposes, using a placeholder
                 setAiAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=ai456');
             } catch (error) {
                 console.error('Failed to load AI avatar:', error);
-                // Use null to trigger the fallback icon
                 setAiAvatar(null);
             }
         };
@@ -54,22 +43,12 @@ export const MessageList = ({ chatId }: MessageListProps) => {
         scrollToBottom();
     }, [messages]);
 
-    // Initial data loading
-    useEffect(() => {
-        if (chatId) {
-            // Load messages for this chat
-            console.log('Loading messages for chat:', chatId);
-            // Example: loadMessages(chatId);
-        }
-    }, [chatId]);
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     // 处理消息内容，将代码块转换为HTML
     const formatMessageContent = (content: string) => {
-        // 检查是否包含代码块
         if (content.includes('```')) {
             const parts = [];
             let currentIndex = 0;
@@ -77,16 +56,14 @@ export const MessageList = ({ chatId }: MessageListProps) => {
             let match;
 
             while ((match = codeBlockRegex.exec(content)) !== null) {
-                // 添加代码块前的文本
                 if (match.index > currentIndex) {
                     parts.push(
-                        <p key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
+                        <Typography.Paragraph key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
                             {content.substring(currentIndex, match.index)}
-                        </p>
+                        </Typography.Paragraph>
                     );
                 }
 
-                // 添加代码块
                 const language = match[1] || 'plaintext';
                 const code = match[2];
                 parts.push(
@@ -103,20 +80,18 @@ export const MessageList = ({ chatId }: MessageListProps) => {
                 currentIndex = match.index + match[0].length;
             }
 
-            // 添加最后一个代码块后的文本
             if (currentIndex < content.length) {
                 parts.push(
-                    <p key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
+                    <Typography.Paragraph key={`text-${currentIndex}`} className="whitespace-pre-wrap break-words">
                         {content.substring(currentIndex)}
-                    </p>
+                    </Typography.Paragraph>
                 );
             }
 
             return <>{parts}</>;
         }
 
-        // 如果没有代码块，直接返回文本
-        return <p className="whitespace-pre-wrap break-words">{content}</p>;
+        return <Typography.Paragraph className="whitespace-pre-wrap break-words">{content}</Typography.Paragraph>;
     };
 
     const renderMessage = (message: any) => {
@@ -127,7 +102,6 @@ export const MessageList = ({ chatId }: MessageListProps) => {
                 key={message.id}
                 className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'} items-start`}
             >
-                {/* Avatar for assistant (only show on left side) */}
                 {!isUser && (
                     <Tooltip title="AI Assistant">
                         <Avatar
@@ -139,28 +113,35 @@ export const MessageList = ({ chatId }: MessageListProps) => {
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
                             }}
                             size={40}
-                            src={aiAvatar} // Use AI avatar if available
+                            src={aiAvatar}
                         />
                     </Tooltip>
                 )}
 
                 <div
-                    className={`max-w-3/4 p-3 rounded-lg ${isUser
+                    className={`max-w-3/4 p-3 rounded-lg ${
+                        isUser
                             ? 'bg-blue-500 text-white rounded-tr-none'
                             : 'bg-gray-100 text-gray-800 rounded-tl-none'
-                        }`}
+                    }`}
                     style={{
                         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-                        maxWidth: '70%' // Limit message width
+                        maxWidth: '70%',
+                        position: 'relative'
                     }}
                 >
                     {formatMessageContent(message.texts[0].text)}
-                    {/* <div className="text-xs mt-1 text-right opacity-70">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                    </div> */}
+                    <div 
+                        className={`absolute top-0 ${
+                            isUser ? 'right-0' : 'left-0'
+                        } w-3 h-3 transform ${
+                            isUser ? 'translate-x-1/2' : '-translate-x-1/2'
+                        } -translate-y-1/2 ${
+                            isUser ? 'bg-blue-500' : 'bg-gray-100'
+                        } rotate-45`}
+                    />
                 </div>
 
-                {/* Avatar for user (only show on right side) */}
                 {isUser && (
                     <Tooltip title="You">
                         <Avatar
@@ -172,7 +153,7 @@ export const MessageList = ({ chatId }: MessageListProps) => {
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
                             }}
                             size={40}
-                            src={userAvatar} // Use user's avatar if available
+                            src={userAvatar}
                         />
                     </Tooltip>
                 )}

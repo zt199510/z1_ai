@@ -47,8 +47,6 @@ const ChatHeader = (props: { isActionsHidden?: boolean }) => {
                 <ModelSelect />
             </div>
             {!props.isActionsHidden && <div className='mr-2'>
-
-
                 <Popconfirm
                     title={('删除当前对话')}
                     description={('当前对话的所有记录将被删除')}
