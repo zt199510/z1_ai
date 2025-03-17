@@ -17,19 +17,59 @@ export default function Desktop() {
     const headerRef = useRef<HTMLDivElement>(null);
     const { createMessageAndSend, generateLoading, setMessages } = useChatStore();
     
-    // Get chat ID from URL path parameter
+    // 将loadMessages定义为useCallback，并使用传入的id参数
+    const loadMessages = React.useCallback(async (id: string) => {
+        try {
+            if (!id) return;
+            if (id === '-1') return;
+
+            console.log('Loading messages for ID:', id);
+            const sessionId = parseInt(id);
+            console.log('Parsed sessionId:', sessionId);
+            console.log('Making API request with sessionId:', sessionId.toString());
+            
+            const result = await getMessages(sessionId.toString());
+            if (result.success) {
+                console.log('API Response:', result);
+                if (result.data && result.data.length > 0) {
+                    const receivedSessionId = result.data[0].sessionId;
+                    console.log('First message sessionId:', receivedSessionId);
+                    
+                    if (receivedSessionId !== sessionId) {
+                        console.error(`Session ID mismatch! Requested: ${id}, Received: ${receivedSessionId}`);
+                        // 可以选择是否要显示这些消息
+                        const shouldShowMessages = window.confirm(
+                            `检测到会话ID不匹配！\n请求的ID: ${id}\n收到的ID: ${receivedSessionId}\n\n是否仍要显示这些消息？`
+                        );
+                        if (!shouldShowMessages) {
+                            setMessages([]);
+                            return;
+                        }
+                    }
+                }
+                setMessages(result.data);
+            } else {
+                console.error('Failed to load messages:', result);
+                setMessages([]);
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+            setMessages([]);
+        }
+    }, [setMessages]);
+    
+    // Get chat ID from URL path parameter and load messages
     useEffect(() => {
-        // 从路由参数中获取对话ID
         const id = params.id;
         if (id) {
+            console.log('URL params id:', id);
             setChatId(id);
-            loadMessages();
-            console.log('Found conversation ID in URL path:', id);
+            loadMessages(id);  // 直接使用params.id，而不是等待chatId状态更新
         } else {
             console.log('No conversation ID found in URL path');
-            // 可以在这里添加重定向逻辑或显示错误信息
+            setMessages([]);
         }
-    }, [params.id]);
+    }, [params.id, loadMessages]);
 
     // 监听头部高度变化
     useEffect(() => {
@@ -57,20 +97,6 @@ export default function Desktop() {
         };
     }, [showGuideAlert]); // 当showGuideAlert变化时重新计算
 
-    const loadMessages = async () => {
-        try {
-            if (!chatId) return;
-            if (chatId === '-1') return;
-
-            const result = await getMessages(chatId);
-            if (result.success) {
-                setMessages(result.data);
-                console.log('Messages loaded:', result.data);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
     // 处理消息发送
     const handleSendMessage = async (text: string, attachments?: Array<{ mimeType: string; data: string }>) => {
         if (!chatId) {
@@ -78,7 +104,7 @@ export default function Desktop() {
             return;
         }
 
-        console.log('Sending message:', text, attachments);
+        console.log('Sending message with chatId:', chatId);
         // 发送文本消息
         const result = await createMessageAndSend({
             sessionId: parseInt(chatId),

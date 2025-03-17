@@ -60,7 +60,7 @@ const DesktopSidebar: React.FC = () => {
   };
 
   const deleteChat = async (chatId: string) => {
-    
+
     try {
       // Show confirmation dialog before deleting
       const confirmed = await new Promise<boolean>((resolve) => {
@@ -73,7 +73,7 @@ const DesktopSidebar: React.FC = () => {
           onCancel: () => resolve(false),
         });
       });
-      
+
       if (confirmed) {
         const result = await deleteSession(Number(chatId));
         if (result.success) {

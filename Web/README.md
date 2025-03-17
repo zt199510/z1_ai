@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI 智能对话助手
 
-## Getting Started
+一个现代化的AI对话应用，提供智能对话、文件处理、代码高亮等功能。
 
-First, run the development server:
+## 功能特点
+
+- 🤖 智能AI对话：支持与AI助手进行自然语言对话
+- 💾 对话历史：保存并管理所有对话记录
+- 📁 文件处理：支持上传和处理各类文件
+- 🎨 美观界面：现代化的UI设计，流畅的交互体验
+- 💻 代码高亮：支持多种编程语言的代码块显示
+- 📱 响应式设计：适配各种屏幕尺寸
+- 🔄 实时更新：对话内容实时刷新
+- 🎯 会话管理：支持创建、删除、清空会话
+
+## 技术栈
+
+- **前端框架**: React + TypeScript
+- **UI组件**: Ant Design (antd)
+- **状态管理**: Zustand
+- **路由**: React Router
+- **样式**: Tailwind CSS
+- **开发工具**: Vite
+
+## 快速开始
+
+### 安装依赖
+
+```bash
+npm install
+# 或
+yarn install
+```
+
+### 运行开发环境
 
 ```bash
 npm run dev
-# or
+# 或
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 构建生产版本
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+# 或
+yarn build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 使用指南
 
-## Learn More
+### 1. 创建新对话
 
-To learn more about Next.js, take a look at the following resources:
+1. 点击左侧边栏的"新建对话"按钮
+2. 输入初始消息开始对话
+3. 系统会自动为对话创建一个标题
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. 发送消息
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. 在底部输入框中输入文本消息
+2. 支持上传文件附件
+3. 点击发送按钮或按回车键发送消息
 
-## Deploy on Vercel
+### 3. 代码块支持
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+在消息中可以使用代码块语法：
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+\```语言名称
+代码内容
+\```
+
+支持多种编程语言的语法高亮。
+
+### 4. 会话管理
+
+- **清空对话**: 点击顶部工具栏的清空按钮
+- **删除会话**: 点击顶部工具栏的删除按钮
+- **会话设置**: 点击顶部工具栏的设置按钮
+
+### 5. 文件处理
+
+1. 点击输入框旁的文件上传按钮
+2. 选择要上传的文件
+3. 文件会随消息一起发送给AI助手
+
+## 项目结构
+
+```
+src/
+├── apis/           # API 接口
+├── components/     # 通用组件
+├── hooks/         # 自定义 Hooks
+├── pages/         # 页面组件
+│   └── Conversations/    # 对话相关页面
+│       ├── components/   # 对话页面组件
+│       └── _layout/     # 布局组件
+├── stores/        # 状态管理
+└── types/         # TypeScript 类型定义
+```
+
+## 开发指南
+
+### 添加新功能
+
+1. 在相应目录创建新组件
+2. 更新状态管理（如需要）
+3. 添加新的API接口（如需要）
+4. 更新路由配置（如需要）
+
+### 代码规范
+
+- 使用TypeScript编写所有组件
+- 遵循React Hooks的最佳实践
+- 使用Tailwind CSS进行样式设计
+- 保持组件的单一职责
+
+## 注意事项
+
+1. 确保已安装所有必要的依赖
+2. 开发时注意检查TypeScript类型
+3. 遵循项目既定的代码风格
+4. 定期进行代码提交和备份
+
+## 贡献指南
+
+1. Fork 项目
+2. 创建特性分支
+3. 提交变更
+4. 推送到分支
+5. 创建 Pull Request
+
+## 许可证
+
+MIT License
