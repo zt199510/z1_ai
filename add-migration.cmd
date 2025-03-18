@@ -1,0 +1,1 @@
+dotnet ef migrations add Initial --project "Src\EntityFramework\EntityFramework.Sqlite\EntityFramework.Sqlite.csproj" --startup-project "Src\Z1APIService.ApiService\Z1APIService.ApiService.csproj" --context "EntityFramework.Sqlite.SqliteDbContext" --output-dir "Migrations" 
