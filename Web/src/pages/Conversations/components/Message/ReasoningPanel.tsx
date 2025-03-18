@@ -11,7 +11,6 @@ export const ReasoningPanel: React.FC<ReasoningPanelProps> = ({ reasoningUpdate 
 
     return (
         <Collapse
-            ghost
             expandIconPosition="end"
             className="mt-1"
             defaultActiveKey={['1']}
@@ -19,7 +18,7 @@ export const ReasoningPanel: React.FC<ReasoningPanelProps> = ({ reasoningUpdate 
                 {
                     key: '1',
                     label: (
-                        <Flex align="center" gap={4}>
+                        <Flex align="center" gap={4} className="text-gray-700">
                             <BulbOutlined />
                             <span>查看推理过程</span>
                         </Flex>

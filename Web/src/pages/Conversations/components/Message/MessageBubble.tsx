@@ -4,6 +4,7 @@ import { UserOutlined, RobotOutlined, SyncOutlined, SmileOutlined, FrownOutlined
 import { Bubble, type BubbleProps } from '@ant-design/x';
 import { ReasoningPanel } from './ReasoningPanel';
 import { ModelUsage } from './ModelUsage';
+import { SearchPanel } from './SearchPanel';
 
 interface MessageBubbleProps {
     message: {
@@ -11,6 +12,7 @@ interface MessageBubbleProps {
         texts: Array<{
             text: string;
             reasoningUpdate?: string;
+            searchResults?: any[];
         }>;
         modelUsages?: {
             promptTokens: number;
@@ -24,9 +26,10 @@ interface MessageBubbleProps {
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, renderMarkdown }) => {
     const isUser = message.role === 'user';
     const hasReasoning = !isUser && message.texts[0].reasoningUpdate;
-
+    const hasSearch = !isUser && message.texts[0].searchResults;
     const messageContent = (
         <div>
+            {hasSearch && <SearchPanel searchResults={message.texts[0].searchResults || []} />}
             {hasReasoning && <ReasoningPanel reasoningUpdate={message.texts[0].reasoningUpdate || ''} />}
             <div className="markdown-content">
                 {renderMarkdown(message.texts[0].text)}
@@ -68,14 +71,18 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, renderMar
         },
         footer: (
             <Flex>
-                <Button
-                    size="small"
-                    type="text"
-                    icon={<SyncOutlined />}
-                    style={{ marginInlineEnd: 'auto' }}
-                />
-                <Button size="small" type="text" icon={<SmileOutlined />} />
-                <Button size="small" type="text" icon={<FrownOutlined />} />
+                {!isUser && (
+                    <>
+                        <Button
+                            size="small"
+                            type="text"
+                            icon={<SyncOutlined />}
+                            style={{ marginInlineEnd: 'auto' }}
+                        />
+                        <Button size="small" type="text" icon={<SmileOutlined />} />
+                        <Button size="small" type="text" icon={<FrownOutlined />} />
+                    </>
+                )}
             </Flex>
         ),
     };

@@ -37,54 +37,15 @@ public sealed class ChatService(
    ILogger<ChatService> logger)
    : FastApi
 {
-    private static readonly Dictionary<string, Dictionary<string, double>> ImageSizeRatios = new()
-    {
-        {
-            "dall-e-2", new Dictionary<string, double>
-            {
-                { "256x256", 1 },
-                { "512x512", 1.125 },
-                { "1024x1024", 1.25 }
-            }
-        },
-        {
-            "dall-e-3", new Dictionary<string, double>
-            {
-                { "1024x1024", 1 },
-                { "1024x1792", 2 },
-                { "1792x1024", 2 }
-            }
-        },
-        {
-            "ali-stable-diffusion-xl", new Dictionary<string, double>
-            {
-                { "512x1024", 1 },
-                { "1024x768", 1 },
-                { "1024x1024", 1 },
-                { "576x1024", 1 },
-                { "1024x576", 1 }
-            }
-        },
-        {
-            "ali-stable-diffusion-v1.5", new Dictionary<string, double>
-            {
-                { "512x1024", 1 },
-                { "1024x768", 1 },
-                { "1024x1024", 1 },
-                { "576x1024", 1 },
-                { "1024x576", 1 }
-            }
-        },
-        {
-            "wanx-v1", new Dictionary<string, double>
-            {
-                { "1024x1024", 1 },
-                { "720x1280", 1 },
-                { "1280x720", 1 }
-            }
-        }
-    };
+    /// <summary>
+    /// think: 协议头
+    /// </summary>
+    public const string ThinkStart = "<think>";
 
+    /// <summary>
+    /// think: 协议尾
+    /// </summary>
+    public const string ThinkEnd = "</think>";
     [Authorize]
     public async Task ChatCompleteAsync(HttpContext context, ChatCompleteParam input)
     {
@@ -113,6 +74,8 @@ public sealed class ChatService(
             }
             messages.Reverse();
             var first = true;
+            var isThink = false;
+
             // 获取当前会话模型属于的模型
             var model = await dbContext.Models
                 .AsNoTracking()
@@ -135,6 +98,7 @@ public sealed class ChatService(
                     history.AddMessage(new AuthorRole(message.Role), text.Text);
                 }
             }
+
             //计算输入额度
             decimal quota = 0;
             if (model.Pricing is { Input: not null })
@@ -178,7 +142,9 @@ public sealed class ChatService(
 
                     // 判断jsonContent["choices"]索引是=0
                     if (jsonContent["choices"].AsArray().Count == 0)
+                    {
                         continue;
+                    }
 
                     // 如果存在reasoning_content则说明是推理
                     if (jsonContent!["choices"]![0]!["delta"]!["reasoning_content"] != null)
@@ -193,6 +159,33 @@ public sealed class ChatService(
                     }
                     else
                     {
+                        #region 解析内容中的think协议
+
+                        if (first && item.ToString().Equals(ThinkStart, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isThink = true;
+                            continue;
+                        }
+
+                        if (item.ToString().Equals(ThinkEnd, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isThink = false;
+                            continue;
+                        }
+
+                        if (isThink)
+                        {
+                            reasoningUpdateSb.Append(item);
+                            await context.Response.WriteAsync("data: " + JsonSerializer.Serialize(new
+                            {
+                                data = item,
+                                type = "reasoning",
+                            }, JsonOptions.DefaultJsonSerializerOptions) + "\n\n");
+                            continue;
+                        }
+
+                        #endregion
+
                         sb.Append(item);
                         await context.Response.WriteAsync("data: " + JsonSerializer.Serialize(new
                         {
@@ -331,7 +324,7 @@ public sealed class ChatService(
             }
         }
         var kernel = KernelFactory.CreateKernel(model.ModelId, "http://abc.ztgametv.cn:10086/v1", "sk-uxaC405uujdT3CSS828dC75fF89b49B09dFa9a76B13667E3", "openai");
-      
+
         var chatPlugin = kernel.Plugins["Chat"];
 
         var result = await kernel.InvokeAsync(chatPlugin["TopicNaming"], new KernelArguments()
