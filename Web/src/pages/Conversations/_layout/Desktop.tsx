@@ -181,7 +181,6 @@ export default function Desktop() {
                         <div className="container max-w-4xl mx-auto">
                             <MessageInput
                                 submit={handleSendMessage}
-                                onHeightChange={handleInputHeightChange}
                                 generateLoading={generateLoading}
                             />
                         </div>
