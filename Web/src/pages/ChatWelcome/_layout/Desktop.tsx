@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert } from 'antd';
 import GreetingHeader from '../components/GreetingHeader';
-import ChatHeader from '../components/ChatHeader';
 import AdaptiveTextarea from '../components/AdaptiveTextarea';
 import { useChatStore } from '@/stores/chatStore';
 import { useNavigate } from 'react-router-dom';

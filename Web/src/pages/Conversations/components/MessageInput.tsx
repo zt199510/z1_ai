@@ -17,7 +17,6 @@ const MessageInput = (props: MessageInputProps) => {
     const [uploadedImages, setUploadedImages] = useState<Array<{ mimeType: string; data: string; preview: string }>>([]);
     const [needWebSearch, setNeedWebSearch] = useState(false);
 
-
     const removeImage = (index: number) => {
         const newImages = [...uploadedImages];
         // Release object URL to prevent memory leaks

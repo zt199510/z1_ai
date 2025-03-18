@@ -253,24 +253,18 @@ public sealed class ChatService(
                 ResponseTime = (int)sw.ElapsedMilliseconds,
                 ModelId = model.Id
             };
-
             // 计算完成额度
             if (model.Pricing is { Output: not null })
             {
                 quota += (decimal)(completeTokens * model.Pricing.Output ?? 0);
             }
-
             quota = Math.Round(quota, 0, MidpointRounding.AwayFromZero);
-
             await dbContext.ChatMessages.AddAsync(chatMessage);
-
             await dbContext.ChatMessages.AddAsync(userChatMessage);
-
             await dbContext.SaveChangesAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
             await context.Response.WriteAsync("data: [done]" + "\n\n");
         }
     }
