@@ -194,7 +194,7 @@ export const useSessionManager: StateCreator<
 
         set({ messages: [...get().messages], generateLoading: false });
         console.log('Previous messages length:', previousMessages.length);
-        
+
         // 如果这是第一轮对话（之前没有消息），则重命名会话
         if (previousMessages.length === 0) {
             console.log('First conversation, renaming session...');
