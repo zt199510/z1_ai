@@ -34,6 +34,8 @@ public static class ServiceExtensions
 
         services.Configure<GoogelOption>(configuration.GetSection(GoogelOption.Name));
 
+        services.Configure<GitHubOptions>(configuration.GetSection(GitHubOptions.Name));
+
         services.AddAuthorization()
             .AddAuthentication(options =>
             {

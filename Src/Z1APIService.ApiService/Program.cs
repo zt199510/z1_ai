@@ -1,15 +1,16 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Z1APIService.ApiService.Extensions;
-using Z1APIService.ApiService.Infrastructure;
 using System.Net;
 using Z1APIService.ApiService.Converters;
 using Z1.Core;
 using Z1APIService.ApiService.Backstage;
+using Z1APIService.ApiService.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddSingleton<FileStaticMiddleware>();
+builder.Services.AddSingleton<GlobalMiddleware>();
 
 builder.Services.AddHttpClient();
 
@@ -43,6 +44,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<FileStaticMiddleware>();
+app.UseMiddleware<GlobalMiddleware>();
 app.UseStaticFiles();
 app.MapMiniApis();
 

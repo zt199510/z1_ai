@@ -1,4 +1,4 @@
-﻿namespace Z1APIService.ApiService.Infrastructure;
+﻿namespace Z1APIService.ApiService.Middlewares;
 
 public class FileStaticMiddleware : IMiddleware
 {
