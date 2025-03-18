@@ -119,7 +119,7 @@ public sealed class ChatService(
                 .Where(x => x.ModelId == session.Model)
                 .FirstOrDefaultAsync();
             var allModels = await dbContext.Models.ToListAsync();
-            var kernel = KernelFactory.CreateKernel(model.ModelId, "http://abc.ztgametv.cn:10086/v1", "sk-uxaC405uujdT3CSS828dC75fF89b49B09dFa9a76B13667E3", "openai");
+            var kernel = KernelFactory.CreateKernel("deepseek-reasoner", "http://abc.ztgametv.cn:10086/v1", "sk-uxaC405uujdT3CSS828dC75fF89b49B09dFa9a76B13667E3", "openai");
             var history = new ChatHistory();
 
             var requestToken = 0;
@@ -136,7 +136,6 @@ public sealed class ChatService(
                 }
             }
             //计算输入额度
-
             decimal quota = 0;
             if (model.Pricing is { Input: not null })
                 quota = (decimal)(requestToken * model.Pricing.Input ?? 0);
@@ -226,13 +225,9 @@ public sealed class ChatService(
           .ExecuteUpdateAsync(x =>
               x.SetProperty(a => a.Text, x => sb.ToString())
                   .SetProperty(a => a.ReasoningUpdate, x => reasoningUpdateSb.ToString()));
-
             await dbContext.MessageModelUsages.Where(x => x.MessageId == input.AssistantMessageId).ExecuteDeleteAsync();
-
             await dbContext.MessageModelUsages.AddAsync(modelUsage);
-
             await dbContext.SaveChangesAsync();
-
             var userChatMessage = new ChatMessage
             {
                 ChannelId = 1,
@@ -276,7 +271,7 @@ public sealed class ChatService(
         catch (Exception)
         {
 
-            
+            await context.Response.WriteAsync("data: [done]" + "\n\n");
         }
     }
 

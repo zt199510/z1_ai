@@ -16,7 +16,7 @@ export default function Desktop() {
     const messageListRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const { createMessageAndSend, generateLoading, setMessages } = useChatStore();
-    
+
     // 将loadMessages定义为useCallback，并使用传入的id参数
     const loadMessages = React.useCallback(async (id: string) => {
         try {
@@ -27,14 +27,14 @@ export default function Desktop() {
             const sessionId = parseInt(id);
             console.log('Parsed sessionId:', sessionId);
             console.log('Making API request with sessionId:', sessionId.toString());
-            
+
             const result = await getMessages(sessionId.toString());
             if (result.success) {
                 console.log('API Response:', result);
                 if (result.data && result.data.length > 0) {
                     const receivedSessionId = result.data[0].sessionId;
                     console.log('First message sessionId:', receivedSessionId);
-                    
+
                     if (receivedSessionId !== sessionId) {
                         console.error(`Session ID mismatch! Requested: ${id}, Received: ${receivedSessionId}`);
                         // 可以选择是否要显示这些消息
@@ -57,7 +57,7 @@ export default function Desktop() {
             setMessages([]);
         }
     }, [setMessages]);
-    
+
     // Get chat ID from URL path parameter and load messages
     useEffect(() => {
         const id = params.id;
@@ -81,7 +81,6 @@ export default function Desktop() {
 
         // 初始更新
         updateHeaderHeight();
-
         // 创建ResizeObserver来监听头部大小变化
         const resizeObserver = new ResizeObserver(updateHeaderHeight);
         if (headerRef.current) {
@@ -135,8 +134,8 @@ export default function Desktop() {
     return (
         <div className="flex flex-col h-full bg-white relative">
             <div ref={headerRef}>
-                {chatId && <ConversationHeader 
-                    chatId={chatId} 
+                {chatId && <ConversationHeader
+                    chatId={chatId}
                     showGuideAlert={showGuideAlert}
                     onGuideAlertClose={() => setShowGuideAlert(false)}
                 />}

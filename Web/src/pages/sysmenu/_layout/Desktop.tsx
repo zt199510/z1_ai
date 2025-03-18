@@ -79,6 +79,11 @@ const DesktopSidebar: React.FC = () => {
         if (result.success) {
           message.success('会话已成功删除');
           loadSessions('');
+          // 判断是否删除的是当前页面的会话
+          const currentPath = location.pathname;
+          if (currentPath.includes(`/conversations/${chatId}`)) {
+            navigate('/');
+          }
         } else {
           message.error('删除会话失败，请重试');
         }
