@@ -32,7 +32,7 @@ const WebSearchButton: React.FC<WebSearchButtonProps> = ({
                 title="联网搜索"
                 placement="bottom"
                 open={tooltipVisible}
-                overlayStyle={{ zIndex: 1100 }}
+                styles={{ root: { zIndex: 1100 } }}
             >
                 <Button
                     type={needWebSearch ? 'primary' : 'default'}
