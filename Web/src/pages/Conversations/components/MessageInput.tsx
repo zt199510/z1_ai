@@ -78,7 +78,6 @@ const MessageInput = (props: MessageInputProps) => {
     );
     return (
         <Flex wrap gap={12} style={{ paddingBottom: 12 }} className="relative">
-
             <Sender
                 header={senderHeader}
                 prefix={

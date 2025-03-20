@@ -46,6 +46,12 @@ export interface SessionManager {
      * @param messages
      */
     setMessages: (messages: any[]) => void;
+
+/**
+     * 设置消息
+     * @param messages
+     */
+    setNetworking: (value: boolean) => void;
 }
 
 
@@ -151,7 +157,7 @@ export const useSessionManager: StateCreator<
         const chatCompleteParams = {
             sessionId: param.sessionId,
             parentId: 0,
-            networking: false,
+            networking: get().networking,
             text: userMessage.texts[0].text,
             fileIds: userMessage.files.map(file => file.fileId),
             functionCalls: [],
@@ -277,7 +283,7 @@ export const useSessionManager: StateCreator<
                 text: userMessage.texts[0].text,
                 fileIds: userMessage.files.map(file => file.fileId),
                 functionCalls: [],
-                networking: false,
+                networking: get().networking,
                 assistantMessageId: tempAiMessage.texts[tempAiMessage.texts.length - 1].id
             } as ChatCompleteParams;
 
@@ -362,6 +368,9 @@ export const useSessionManager: StateCreator<
     },
     setMessages: (messages: any[]) => {
         set({ messages });
+    },
+    setNetworking: (value: boolean) => {
+        set({ networking: value });
     }
 });
 

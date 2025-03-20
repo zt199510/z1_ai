@@ -8,6 +8,7 @@ export interface ChatState {
     generateLoading: boolean;
     // 展开文件
     fileExpanded?: boolean;
+    networking:boolean;
 }
 
 export const initialState: ChatState = {
@@ -21,6 +22,7 @@ export const initialState: ChatState = {
     files: [],
     generateLoading: false,
     fileExpanded: false,
+    networking:false
 }
 
 

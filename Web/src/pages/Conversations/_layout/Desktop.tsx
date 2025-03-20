@@ -15,7 +15,7 @@ export default function Desktop() {
     const [headerHeight, setHeaderHeight] = useState<number>(80); // 默认头部高度
     const messageListRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
-    const { createMessageAndSend, generateLoading, setMessages } = useChatStore();
+    const { createMessageAndSend, generateLoading, setMessages, setNetworking } = useChatStore();
 
     // 将loadMessages定义为useCallback，并使用传入的id参数
     const loadMessages = React.useCallback(async (id: string) => {
@@ -97,17 +97,17 @@ export default function Desktop() {
     }, [showGuideAlert]); // 当showGuideAlert变化时重新计算
 
     // 处理消息发送
-    const handleSendMessage = async (text: string, attachments?: Array<{ mimeType: string; data: string }>) => {
+    const handleSendMessage = async (message: string, attachments?: Array<{ mimeType: string; data: string }>, needWebSearch?: boolean, model?: string) => {
         if (!chatId) {
             console.error('No conversation ID available');
             return;
         }
-
+        setNetworking(needWebSearch || false);
         console.log('Sending message with chatId:', chatId);
         // 发送文本消息
         const result = await createMessageAndSend({
             sessionId: parseInt(chatId),
-            value: text,
+            value: message,
         });
         // 如果有附件，可以在这里处理   
         if (attachments && attachments.length > 0) {
@@ -115,22 +115,6 @@ export default function Desktop() {
             console.log('Attachments:', attachments);
         }
     };
-
-    // Function to handle input height changes
-    const handleInputHeightChange = (height: number) => {
-        setInputHeight(height + 32); // Add padding
-
-        // Scroll message list to bottom when input height changes
-        if (messageListRef.current) {
-            setTimeout(() => {
-                messageListRef.current?.scrollTo({
-                    top: messageListRef.current.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 100);
-        }
-    };
-
     return (
         <div className="flex flex-col h-full bg-white relative">
             <div ref={headerRef}>
